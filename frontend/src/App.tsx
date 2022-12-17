@@ -1,7 +1,8 @@
-import logo from './logo.svg';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css';
+import Graph from './Graph';
+import { Box } from '@mui/material';
 
 function App() {
 
@@ -15,8 +16,15 @@ function App() {
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
     <div className="App">
-      <h1>Numerical Integration Playground</h1>
-      <img src={logo} width="800px" className="App-logo" alt="logo" />
+      <Box display="flex" justifyContent="center" height={"10vh"}>
+        <h3>Numerical Integration Playground</h3>
+      </Box>
+      <Box margin="auto" display="flex" height={"70vh"} width={"70vw"}>
+        <Graph />
+      </Box>
+      <Box display="flex" padding="20px" justifyContent="center" height={"20vh"}>
+        Input goes here
+      </Box>
     </div>
   </ThemeProvider>
   );
