@@ -3,9 +3,11 @@ type Point = {
 	y: number
 }
 
-type IVP = {
-	gradient: string,
+type IVPRequest = {
+	gradient: MathNode,
 	initialCondition: Point,
 	timeStep: number,
 	numSteps: number,
 }
+
+type IVPResponse = Point[]

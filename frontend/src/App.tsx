@@ -2,9 +2,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { TextField, Button } from "@mui/material";
 import { useState, useEffect } from 'react';
+import { parse, MathNode } from 'mathjs';
 import './App.css';
 import Graph from './Graph';
 import { Box } from '@mui/material';
+import { calculate } from './backendSurface';
 
 function App() {
 
@@ -14,7 +16,39 @@ function App() {
     }
   });
 
-  const [ivp, setIvp] = useState<IVP>();
+  const defaultGrad = "x + y";
+  const defaultInit = "(0, 0)";
+  const defaultH = ".1";
+  const defaultN = "20";
+
+  function parseGrad(s: string) : MathNode | null {
+    try {
+      return parse(s);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function parseInit(s: string) : Point | null {
+    return {x: 0, y: 0};
+  }
+
+  function parseH(s: string) : number | null {
+    const val = parseFloat(s);
+    return val ? val : null;
+  }
+
+  function parseN(s: string) : number | null {
+    const val = parseInt(s);
+    return val ? val : null;
+  }
+
+  const [grad, setGrad] = useState<MathNode | null>(parseGrad(defaultGrad));
+  const [init, setInit] = useState<Point | null>(parseInit(defaultInit));
+  const [h, setH] = useState<number | null>(parseH(defaultH));
+  const [n, setN] = useState<number | null>(parseN(defaultN));
+
+  const [data, setData] = useState<Point[]>();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -27,28 +61,48 @@ function App() {
         <Box width={"20vw"}>
           <TextField
             label="Gradient"
+            error={grad === null}
             autoComplete="off"
             defaultValue={"x + y"}
-            onChange={(e) => {}} />
+            onChange={(e) => {
+              setGrad(parseGrad(e.target.value))
+            }} />
           <TextField
             label="Initial Condition"
+            error={init===null}
             autoComplete="off"
             defaultValue={"(0, 0)"}
-            onChange={(e) => {}} />
+            onChange={(e) => {
+              setInit(parseInit(e.target.value));
+            }} />
           <TextField
             label="Δh"
+            error={h===null}
             autoComplete="off"
             defaultValue={"0.1"}
-            onChange={(e) => {}} />
+            onChange={(e) => {
+              setH(parseH(e.target.value));
+            }} />
           <TextField
             label="Number of Iterations"
+            error={n===null}
             autoComplete="off"
             defaultValue={"100"}
-            onChange={(e) => {}} />
-          <Button variant="contained">Integrate!</Button>
+            onChange={(e) => {
+              setN(parseN(e.target.value));
+            }} />
+          <Button variant="contained" onClick={async () => {
+            if (grad !== null && init !== null && h !== null && n !== null) {
+              setData(await calculate({
+                gradient: grad,
+                initialCondition: init,
+                timeStep: h,
+                numSteps: n}));
+            }
+          }}>Integrate!</Button>
         </Box>
         <Box width={"70vw"}>
-          <Graph />
+          <Graph data={data}/>
         </Box>
       </Box>
     </div>
