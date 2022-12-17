@@ -58,8 +58,6 @@ const Graph = () => {
 			.attr("d", d3.line()(
 				transformedData
 				))
-
-
 	}
 
 	window.addEventListener("resize", render)
