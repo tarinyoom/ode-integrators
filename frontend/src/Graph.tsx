@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { BaseType } from 'd3';
 import { Paper } from '@mui/material';
-import data from './testData.json';
 
 const Graph = ({data}:{data: Point[] | undefined}) => {
 

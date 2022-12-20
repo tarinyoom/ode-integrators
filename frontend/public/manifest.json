@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ODE Playground",
+  "name": "Numerical integration of first order ODEs in R2",
   "icons": [
     {
       "src": "favicon.ico",

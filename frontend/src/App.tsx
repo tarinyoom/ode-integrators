@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { TextField, Button } from "@mui/material";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { parse, MathNode } from 'mathjs';
 import './App.css';
 import Graph from './Graph';
@@ -54,10 +54,13 @@ function App() {
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
     <div className="App">
-      <Box display="flex" justifyContent="center" height={"10vh"}>
-        <h3>Numerical Integration Playground</h3>
-      </Box>
-      <Box margin="auto" display="flex" height={"80vh"} width={"90vw"}>
+    <Box display="flex" justifyContent="center" height={"10vh"}>
+      <h3>Numerical Integration Playground</h3>
+    </Box>
+    <Box display="flex" justifyContent="center" height={"10vh"}>
+      <p>(WIP; no backend in place yet)</p>
+    </Box>
+      <Box margin="auto" display="flex" height={"70vh"} width={"90vw"}>
         <Box width={"20vw"}>
           <TextField
             label="Gradient"
