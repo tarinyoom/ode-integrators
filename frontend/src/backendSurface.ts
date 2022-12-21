@@ -2,8 +2,10 @@ const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us
 
 export async function calculate(req: IVPRequest): Promise<IVPResponse> {
 
+	console.log(`sending: ${JSON.stringify(req)}`);
+
 	return fetch(BACKEND_ENDPOINT, {
-		body: JSON.stringify({"data": 3}),
+		body: JSON.stringify(req),
 		headers: {
 			"Access-Control-Request-Headers": "*"
 			},

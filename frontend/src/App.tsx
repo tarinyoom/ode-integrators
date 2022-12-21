@@ -58,7 +58,7 @@ function App() {
       <h3>Numerical Integration Playground</h3>
     </Box>
     <Box display="flex" justifyContent="center" height={"10vh"}>
-      <p>(WIP; no backend in place yet)</p>
+      <p>(WIP; can only change h and number of iterations)</p>
     </Box>
       <Box margin="auto" display="flex" height={"70vh"} width={"90vw"}>
         <Box width={"20vw"}>
@@ -82,7 +82,7 @@ function App() {
             label="Δh"
             error={h===null}
             autoComplete="off"
-            defaultValue={"0.1"}
+            defaultValue={h}
             onChange={(e) => {
               setH(parseH(e.target.value));
             }} />
@@ -90,7 +90,7 @@ function App() {
             label="Number of Iterations"
             error={n===null}
             autoComplete="off"
-            defaultValue={"100"}
+            defaultValue={n}
             onChange={(e) => {
               setN(parseN(e.target.value));
             }} />
