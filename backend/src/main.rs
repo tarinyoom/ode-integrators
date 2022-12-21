@@ -11,12 +11,11 @@ async fn main() -> Result<(), Error> {
 
 async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
     let (event, _context) = event.into_parts();
-    let first_name = event["firstName"].as_str().unwrap_or("world");
+    let max_iters: u64 = event["numSteps"].as_u64().unwrap_or(3);
+    let d_h: f64 = event["timeStep"].as_f64().unwrap_or(0.1);
     
     // make a vec of points
     let mut points: Vec<(f64, f64)> = Vec::new();
-    let max_iters: u32 = 10;
-    let d_h: f64 = 0.1;
     let initial_condition: (f64, f64) = (1.0, 0.0);
     
     points.push(initial_condition);
