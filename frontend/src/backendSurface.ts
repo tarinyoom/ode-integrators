@@ -1,14 +1,14 @@
+const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us-west-1.on.aws/";
 
 export async function calculate(req: IVPRequest): Promise<IVPResponse> {
-	return [
-		{x: 0, y: 0.5},
-		{x: -1, y: 1.3},
-		{x: -2, y: 1.2},
-		{x: -2.2, y: 0.5},
-		{x: 0, y:-2},
-		{x: 2.2, y: 0.5},
-		{x: 2, y: 1.3},
-		{x: 1, y: 1.2},
-		{x:0, y: 0.5}
-	]
+
+	return fetch(BACKEND_ENDPOINT, {
+		body: JSON.stringify({"data": 3}),
+		headers: {
+			"Access-Control-Request-Headers": "*"
+			},
+		method: "post",
+	}).then(async (response) => {
+		return (await response.json()).data;
+	});
 }
