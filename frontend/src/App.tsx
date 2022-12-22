@@ -17,9 +17,9 @@ function App() {
   });
 
   const defaultGrad = "x + y";
-  const defaultInit = "(0, 0)";
+  const defaultInit = "(1, 0)";
   const defaultH = ".1";
-  const defaultN = "20";
+  const defaultN = "1000";
 
   function parseGrad(s: string) : MathNode | null {
     try {
@@ -97,8 +97,8 @@ function App() {
           <Button variant="contained" onClick={async () => {
             if (grad !== null && init !== null && h !== null && n !== null) {
               setData(await calculate({
-                gradient: grad,
-                initialCondition: init,
+                //gradient: grad,
+                //initialCondition: init,
                 timeStep: h,
                 numSteps: n}));
             }

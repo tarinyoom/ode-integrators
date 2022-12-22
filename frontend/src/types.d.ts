@@ -4,8 +4,8 @@ type Point = {
 }
 
 type IVPRequest = {
-	gradient: MathNode,
-	initialCondition: Point,
+	//gradient: MathNode,
+	//initialCondition: Point,
 	timeStep: number,
 	numSteps: number,
 }
