@@ -2,6 +2,14 @@ use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize)]
+struct IVPRequest {
+    numSteps: i32,
+    timeStep: f64,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let func = service_fn(func);
@@ -10,10 +18,14 @@ async fn main() -> Result<(), Error> {
 }
 
 async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
-    let (event, _context) = event.into_parts();
-    let max_iters: u64 = event["numSteps"].as_u64().unwrap_or(3);
-    let d_h: f64 = event["timeStep"].as_f64().unwrap_or(0.1);
+    let (msg, _context) = event.into_parts();
+    let body = &msg["body"].as_str().unwrap();
+
+    let req: IVPRequest = serde_json::from_str(body)?;
     
+    let max_iters: i32 = req.numSteps;
+    let d_h: f64 = req.timeStep;
+
     // make a vec of points
     let mut points: Vec<(f64, f64)> = Vec::new();
     let initial_condition: (f64, f64) = (1.0, 0.0);
