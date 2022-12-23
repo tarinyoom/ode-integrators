@@ -2,11 +2,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { TextField, Button } from "@mui/material";
 import { useState } from 'react';
-import { parse, MathNode } from 'mathjs';
 import './App.css';
 import Graph from './Graph';
 import { Box } from '@mui/material';
 import { calculate } from './backendSurface';
+import { parsePoint2D, stringifyPoint, parseN, parseH } from './serdeInputs';
 
 function App() {
 
@@ -16,39 +16,17 @@ function App() {
     }
   });
 
-  const defaultGrad = "x + y";
-  const defaultInit = "(1, 0)";
+  const defaultX = "(1, 0)";
+  const defaultV = "(0, 1)";
   const defaultH = ".1";
   const defaultN = "1000";
 
-  function parseGrad(s: string) : MathNode | null {
-    try {
-      return parse(s);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  function parseInit(s: string) : Point | null {
-    return {x: 0, y: 0};
-  }
-
-  function parseH(s: string) : number | null {
-    const val = parseFloat(s);
-    return val ? val : null;
-  }
-
-  function parseN(s: string) : number | null {
-    const val = parseInt(s);
-    return val ? val : null;
-  }
-
-  const [grad, setGrad] = useState<MathNode | null>(parseGrad(defaultGrad));
-  const [init, setInit] = useState<Point | null>(parseInit(defaultInit));
+  const [x, setX] = useState<Point | null>(parsePoint2D(defaultX));
+  const [v, setV] = useState<Point | null>(parsePoint2D(defaultV));
   const [h, setH] = useState<number | null>(parseH(defaultH));
   const [n, setN] = useState<number | null>(parseN(defaultN));
 
-  const [data, setData] = useState<Point[]>();
+  const [data, setData] = useState<PointState[]>();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -58,28 +36,28 @@ function App() {
       <h3>Numerical Integration Playground</h3>
     </Box>
     <Box display="flex" justifyContent="center" height={"10vh"}>
-      <p>(WIP; can only change h and number of iterations)</p>
+      <p>Plot the trajectory of massless points through a force field!</p>
     </Box>
       <Box margin="auto" display="flex" height={"70vh"} width={"90vw"}>
         <Box width={"20vw"}>
-          <TextField
-            label="Gradient"
-            error={grad === null}
+        <TextField
+            label="Initial Position"
+            error={x===null}
             autoComplete="off"
-            defaultValue={"x + y"}
+            defaultValue={stringifyPoint(x)}
             onChange={(e) => {
-              setGrad(parseGrad(e.target.value))
+              setX(parsePoint2D(e.target.value));
             }} />
           <TextField
-            label="Initial Condition"
-            error={init===null}
+            label="Initial Velocity"
+            error={v===null}
             autoComplete="off"
-            defaultValue={"(0, 0)"}
+            defaultValue={stringifyPoint(v)}
             onChange={(e) => {
-              setInit(parseInit(e.target.value));
+              setV(parsePoint2D(e.target.value));
             }} />
           <TextField
-            label="Δh"
+            label="Time Step"
             error={h===null}
             autoComplete="off"
             defaultValue={h}
@@ -87,7 +65,7 @@ function App() {
               setH(parseH(e.target.value));
             }} />
           <TextField
-            label="Number of Iterations"
+            label="Number of Steps"
             error={n===null}
             autoComplete="off"
             defaultValue={n}
@@ -95,12 +73,14 @@ function App() {
               setN(parseN(e.target.value));
             }} />
           <Button variant="contained" onClick={async () => {
-            if (grad !== null && init !== null && h !== null && n !== null) {
+            if (x != null && v != null && h !== null && n !== null) {
               setData(await calculate({
-                //gradient: grad,
-                //initialCondition: init,
-                timeStep: h,
-                numSteps: n}));
+                init: [{
+                  x: x,
+                  v: v,  
+                }],
+                h: h,
+                n: n}));
             }
           }}>Integrate!</Button>
         </Box>

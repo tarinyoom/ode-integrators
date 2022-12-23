@@ -1,13 +1,14 @@
-type Point = {
-	x: number,
-	y: number
+type Point = number[];
+
+type PointState = {
+	x: Point,
+	v: Point
 }
 
 type IVPRequest = {
-	//gradient: MathNode,
-	//initialCondition: Point,
-	timeStep: number,
-	numSteps: number,
+	init: PointState[],
+	h: number,
+	n: number,
 }
 
-type IVPResponse = Point[]
+type IVPResponse = PointState[]
