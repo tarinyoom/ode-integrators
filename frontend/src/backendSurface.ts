@@ -15,7 +15,8 @@ export async function calculate(req: IVPRequest): Promise<IVPResponse> {
 				},
 			method: "post",
 		}).then(async (response) => {
-			return (await response.json()).data;
+			const json = await response.json();
+			return json.trajectory;
 		});	
 	} else {
 		return testData;
