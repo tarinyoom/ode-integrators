@@ -6,7 +6,7 @@ type PointState = {
 }
 
 type IVPRequest = {
-	init: PointState[],
+	init: PointState,
 	h: number,
 	n: number,
 }

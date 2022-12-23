@@ -75,10 +75,10 @@ function App() {
           <Button variant="contained" onClick={async () => {
             if (x != null && v != null && h !== null && n !== null) {
               setData(await calculate({
-                init: [{
+                init: {
                   x: x,
                   v: v,  
-                }],
+                },
                 h: h,
                 n: n}));
             }
