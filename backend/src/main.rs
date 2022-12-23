@@ -1,13 +1,19 @@
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
-use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
+struct Point {
+    x: [f64; 2],
+    v: [f64; 2]
+}
+
+#[derive(Deserialize)]
 struct IVPRequest {
-    numSteps: i32,
-    timeStep: f64,
+    init: Point,
+    n: i32,
+    h: f64,
 }
 
 #[tokio::main]
@@ -20,29 +26,24 @@ async fn main() -> Result<(), Error> {
 async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
     let (msg, _context) = event.into_parts();
     let body = &msg["body"].as_str().unwrap();
+    
+    let trajectory: Vec<Point> = integrate(serde_json::from_str(body)?);
+    
+    Ok(json!({"trajectory": trajectory}))
+}
 
-    let req: IVPRequest = serde_json::from_str(body)?;
+fn integrate(req: IVPRequest) -> Vec<Point> {
+    let mut trajectory: Vec<Point> = Vec::new();
+    trajectory.push(req.init);
     
-    let max_iters: i32 = req.numSteps;
-    let d_h: f64 = req.timeStep;
-
-    // make a vec of points
-    let mut points: Vec<(f64, f64)> = Vec::new();
-    let initial_condition: (f64, f64) = (1.0, 0.0);
-    
-    points.push(initial_condition);
-    
-    for _ in 1..max_iters {
-        let p_1 = points.last().expect("points should be nonempty");
-        let p_0 = (p_1.0 + p_1.1 * d_h, p_1.1 - p_1.0 * d_h);
-        points.push(p_0);
+    for _ in 1..req.n {
+        let p = trajectory.last().expect("This should be impossible");
+        let d2 = p.x[0].powf(2.) + p.x[1].powf(2.);
+        trajectory.push(
+            Point {
+                x: [p.x[0] + p.v[0] * req.h, p.x[1] + p.v[1] * req.h], 
+                v: [p.v[0] - p.x[0] * req.h / d2, p.v[1] - p.x[1] * req.h / d2]
+            });
     }
-
-    let data: Vec<HashMap<&str, f64>> = 
-        points.iter().map(|&p| HashMap::from([("x", p.0), ("y", p.1)]))
-        .collect::<Vec<HashMap<&str, f64>>>();
-
-    Ok(json!({
-    "data": data}))
-    
+    trajectory
 }
