@@ -5,24 +5,21 @@ import { useState } from 'react';
 import './App.css';
 import Graph from './Graph';
 import { Box } from '@mui/material';
-import { calculate } from './backendSurface';
-import { parsePoint2D, stringifyPoint, parseN, parseH } from './serdeInputs';
+import { calculateAll } from './backendSurface';
+import { parsePoints4D, stringifyPoints, parseN, parseH } from './serdeInputs';
 
 function App() {
-
   const darkTheme = createTheme({
     palette: {
       mode: 'dark'
     }
   });
 
-  const defaultX = "(1, 0)";
-  const defaultV = "(0, 1)";
+  const defaultPs = "(1, 0, 0, 1); (0, 1, 1, 1)";
   const defaultH = ".1";
   const defaultN = "1000";
 
-  const [x, setX] = useState<Point | null>(parsePoint2D(defaultX));
-  const [v, setV] = useState<Point | null>(parsePoint2D(defaultV));
+  const [ps, setPs] = useState<PointState[] | null>(parsePoints4D(defaultPs));
   const [h, setH] = useState<number | null>(parseH(defaultH));
   const [n, setN] = useState<number | null>(parseN(defaultN));
 
@@ -41,20 +38,12 @@ function App() {
       <Box margin="auto" display="flex" height={"70vh"} width={"90vw"}>
         <Box width={"20vw"}>
         <TextField
-            label="Initial Position"
-            error={x===null}
+            label="Initial Points"
+            error={ps===null}
             autoComplete="off"
-            defaultValue={stringifyPoint(x)}
+            defaultValue={stringifyPoints(ps)}
             onChange={(e) => {
-              setX(parsePoint2D(e.target.value));
-            }} />
-          <TextField
-            label="Initial Velocity"
-            error={v===null}
-            autoComplete="off"
-            defaultValue={stringifyPoint(v)}
-            onChange={(e) => {
-              setV(parsePoint2D(e.target.value));
+              setPs(parsePoints4D(e.target.value));
             }} />
           <TextField
             label="Time Step"
@@ -73,14 +62,8 @@ function App() {
               setN(parseN(e.target.value));
             }} />
           <Button variant="contained" onClick={async () => {
-            if (x != null && v != null && h !== null && n !== null) {
-              setData(await calculate({
-                init: {
-                  x: x,
-                  v: v,  
-                },
-                h: h,
-                n: n}));
+            if (ps != null && h !== null && n !== null) {
+              setData((await calculateAll(ps, h, n))[0]);
             }
           }}>Integrate!</Button>
         </Box>

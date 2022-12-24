@@ -7,6 +7,19 @@ export function parsePoint2D(s: string) : Point | null {
 	}
 }
 
+export function parsePoints4D(s: string): PointState[] | null {
+	const points = s.split(";")
+		.map((fragment: string) => parsePoint(fragment.trim()));
+
+	if (points.includes(null)) {
+		return null;
+	} else {
+		return (points as Point[]).map((p: Point) => {
+			return {x: [p[0], p[1]], v: [p[2], p[3]]};
+		})
+	}
+}
+
 function parsePoint(s: string) : Point | null {
 	if (s.length === 0 || s[0] !== "(" || s[s.length - 1] !== ")") {
 		return null;
@@ -23,11 +36,11 @@ function parsePoint(s: string) : Point | null {
 	}
 }
 
-export function stringifyPoint(p: Point | null) : string | null {
-	if (p === null) {
+export function stringifyPoints(ps: PointState[] | null) : string | null {
+	if (ps === null) {
 		return null;
 	} else {
-		return `(${p.join(", ")})`;
+		return ps.map((p) => `(${p.x[0]}, ${p.x[1]}, ${p.v[0]}, ${p.v[1]})`).join(";");
 	}
 }
 
