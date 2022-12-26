@@ -15,7 +15,7 @@ function App() {
     }
   });
 
-  const defaultPs = "(1, 0, 0, 1); (0, 1, 1, 1)";
+  const defaultPs = "(1, 0, 0, 1);(-1, 0, 0, -1)";
   const defaultH = ".1";
   const defaultN = "1000";
 
@@ -23,7 +23,7 @@ function App() {
   const [h, setH] = useState<number | null>(parseH(defaultH));
   const [n, setN] = useState<number | null>(parseN(defaultN));
 
-  const [data, setData] = useState<PointState[]>();
+  const [data, setData] = useState<PointState[][]>();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -63,7 +63,7 @@ function App() {
             }} />
           <Button variant="contained" onClick={async () => {
             if (ps != null && h !== null && n !== null) {
-              setData((await calculateAll(ps, h, n))[0]);
+              setData(await calculateAll(ps, h, n));
             }
           }}>Integrate!</Button>
         </Box>
