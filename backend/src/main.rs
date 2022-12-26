@@ -1,5 +1,6 @@
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
+const GRAVITY: f64 = 6.6743;
 
 use serde::{Deserialize, Serialize};
 
@@ -27,12 +28,12 @@ async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
     let (msg, _context) = event.into_parts();
     let body = &msg["body"].as_str().unwrap();
     
-    let trajectory: Vec<Point> = integrate(serde_json::from_str(body)?);
+    let (trajectory, h) = integrate(serde_json::from_str(body)?);
     
-    Ok(json!({"trajectory": trajectory}))
+    Ok(json!({"trajectory": trajectory, "h": h}))
 }
 
-fn integrate(req: IVPRequest) -> Vec<Point> {
+fn integrate(req: IVPRequest) -> (Vec<Point>, f64) {
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(req.init);
     
@@ -42,8 +43,9 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
         trajectory.push(
             Point {
                 x: [p.x[0] + p.v[0] * req.h, p.x[1] + p.v[1] * req.h], 
-                v: [p.v[0] - p.x[0] * req.h / d2, p.v[1] - p.x[1] * req.h / d2]
+                v: [p.v[0] - p.x[0] * GRAVITY * req.h / d2, p.v[1] - p.x[1] * GRAVITY * req.h / d2]
             });
     }
-    trajectory
+    
+    (trajectory, req.h)
 }
