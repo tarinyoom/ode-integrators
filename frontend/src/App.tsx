@@ -17,7 +17,7 @@ function App() {
 
   const defaultPs = "(1, 0, 0, 1);(3, 0, 0, 1);(5, 0, 0, 1)";
   const defaultH = ".1";
-  const defaultN = "1000";
+  const defaultN = "5000";
 
   const [ps, setPs] = useState<PointState[] | null>(parsePoints4D(defaultPs));
   const [h, setH] = useState<number | null>(parseH(defaultH));
