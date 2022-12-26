@@ -3,7 +3,7 @@ import testData from "./testData.json";
 const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us-west-1.on.aws/";
 const ONLINE = true;
 
-export async function calculateAll(ps: PointState[], h: number, n: number): Promise<IVPResponse[]> {
+export async function calculateAll(ps: PointState[], h: number, n: number): Promise<IVPResult[]> {
 	const requests: IVPRequest[] = ps.map(
 			(p: PointState) => {
 				return {
@@ -16,7 +16,7 @@ export async function calculateAll(ps: PointState[], h: number, n: number): Prom
 	return Promise.all(requests.map(calculate));
 }
 
-export async function calculate(req: IVPRequest): Promise<IVPResponse> {
+export async function calculate(req: IVPRequest): Promise<IVPResult> {
 
 	console.log(`sending: ${JSON.stringify(req)}`);
 
@@ -28,8 +28,7 @@ export async function calculate(req: IVPRequest): Promise<IVPResponse> {
 				},
 			method: "post",
 		}).then(async (response) => {
-			const json = await response.json();
-			return json.trajectory;
+			return await response.json();
 		});	
 	} else {
 		return testData;

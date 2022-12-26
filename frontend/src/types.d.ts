@@ -11,4 +11,7 @@ type IVPRequest = {
 	n: number,
 }
 
-type IVPResponse = PointState[]
+type IVPResult = {
+	trajectory: PointState[],
+	h: number
+}

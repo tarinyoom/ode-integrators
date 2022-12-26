@@ -5,7 +5,7 @@ import { BaseType } from 'd3';
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 
-const Graph = ({data}:{data: PointState[][] | undefined}) => {
+const Graph = ({data}:{data: IVPResult[] | undefined}) => {
 	console.log('got data');
 	const ref = useRef<any>();
 	let animationStep = 0;
@@ -35,7 +35,11 @@ const Graph = ({data}:{data: PointState[][] | undefined}) => {
 				.attr("height", height);
 
 			// calculate domains to show all data points nicely
-			const extents = [d3.extent(data[0].map((d: PointState) => d.x[0])), d3.extent(data[0].map((d: PointState) => d.x[1]))] as [number, number][];
+			const extents = [
+				d3.extent(data[0].trajectory.map((d: PointState) => d.x[0])), 
+				d3.extent(data[0].trajectory.map((d: PointState) => d.x[1]))
+			] as [number, number][];
+
 			const scale  = extents
 				.map((e: [number, number], i: number) => (e[1] - e[0]) / graphDims[i])
 				.reduce((p: number, c: number) => Math.max(p, c));
@@ -65,23 +69,23 @@ const Graph = ({data}:{data: PointState[][] | undefined}) => {
 				.call(d3.axisLeft(yScale));
 
 			console.log("data foreaching")
-			data.forEach((sequence: PointState[], i: number) => {
+			data.forEach((result: IVPResult, i: number) => {
 
 				const pt = svg.append("circle")
-					.attr("cx", MARGIN.left + xScale(sequence[animationStep].x[0]))
-					.attr("cy", MARGIN.top + yScale(sequence[animationStep].x[1]))
+					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep].x[0]))
+					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep].x[1]))
 					.attr("r", "1px")
 					.attr("fill", "#FFFFFF")
 
 				async function animate() {
 
-					if (animationStep >= sequence.length) {
+					if (animationStep >= result.trajectory.length) {
 						return;
 					} else {
 						pt.transition()
-							.duration(100)
-							.attr("cx", MARGIN.left + xScale(sequence[animationStep].x[0]))
-							.attr("cy", MARGIN.top + yScale(sequence[animationStep].x[1]))
+							.duration(1000 * result.h)
+							.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep].x[0]))
+							.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep].x[1]))
 							.on("end", () => {
 								animationStep++;
 								animate();
@@ -96,7 +100,7 @@ const Graph = ({data}:{data: PointState[][] | undefined}) => {
 				.attr("stroke", "#FFFFFF")
 				.attr("stroke-width", "0.15px")
 				.attr("d", d3.line()(
-					sequence.map((point: PointState) => {
+					result.trajectory.map((point: PointState) => {
 						return [MARGIN.left + xScale(point.x[0]), MARGIN.top + yScale(point.x[1])];
 					})));
 
