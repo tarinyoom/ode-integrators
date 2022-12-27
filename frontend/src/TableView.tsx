@@ -13,8 +13,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { e } from 'mathjs';
+import Select from '@mui/material/Select';
 
 function TableView(
 		{ivps, record}:
@@ -27,9 +26,6 @@ function TableView(
 	const [h, setH] = useState<string>("");
 	const [n, setN] = useState<string>("");
 	const [method, setMethod] = useState<string>("");
-
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
   
 	return (
 		<TableContainer component={Paper}>
@@ -83,7 +79,7 @@ function TableView(
 			  <TableCell align="center">
 			  <Input 
 					value={h}
-					error={h===null}
+					error={parseH(h)===null}
 					onChange={(e) => {
 						setH(e.target.value);
 				}}/>
@@ -91,7 +87,7 @@ function TableView(
 			  <TableCell align="center">
 			  <Input 
 			  		value={n}
-					error={n===null}
+					error={parseN(n)===null}
 					onChange={(e) => {
 						setN(e.target.value);
 				}}/>

@@ -6,7 +6,7 @@ const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 
 const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
-	console.log('got data');
+
 	const ref = useRef<any>();
 	let animationStep = 0;
 	let rendered = false;
@@ -68,7 +68,6 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 				.attr("transform", `translate(${MARGIN.left}, ${MARGIN.top})`)
 				.call(d3.axisLeft(yScale));
 
-			console.log("data foreaching")
 			data.forEach((result: IVPSolution, i: number) => {
 
 				const pt = svg.append("circle")

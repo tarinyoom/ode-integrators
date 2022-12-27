@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { TextField, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useState } from 'react';
 import './App.css';
 import Graph from './Graph';
