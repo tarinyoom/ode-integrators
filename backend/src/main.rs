@@ -28,12 +28,12 @@ async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
     let (msg, _context) = event.into_parts();
     let body = &msg["body"].as_str().unwrap();
     
-    let (trajectory, h) = integrate(serde_json::from_str(body)?);
+    let trajectory = integrate(serde_json::from_str(body)?);
     
-    Ok(json!({"trajectory": trajectory, "h": h}))
+    Ok(json!({"trajectory": trajectory}))
 }
 
-fn integrate(req: IVPRequest) -> (Vec<Point>, f64) {
+fn integrate(req: IVPRequest) -> Vec<Point> {
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(req.init);
     
@@ -47,5 +47,5 @@ fn integrate(req: IVPRequest) -> (Vec<Point>, f64) {
             });
     }
     
-    (trajectory, req.h)
+    trajectory
 }
