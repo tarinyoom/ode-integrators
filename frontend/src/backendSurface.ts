@@ -3,20 +3,30 @@ import testData from "./testData.json";
 const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us-west-1.on.aws/";
 const ONLINE = true;
 
-export async function calculateAll(ps: PointState[], h: number, n: number): Promise<IVPResult[]> {
-	const requests: IVPRequest[] = ps.map(
-			(p: PointState) => {
-				return {
-					init: p,
-					h: h,
-					n: n
-				};
-			});
-	
-	return Promise.all(requests.map(calculate));
+export async function solveAll(problems: IVP[]): Promise<IVPSolution[]> {
+
+	return Promise.all(problems.map(async ivp => {
+
+		const response : IntegratorResponse = await integrate({
+			x0: ivp.x0,
+			v0: ivp.v0,
+			h: ivp.h,
+			n: ivp.n,
+			method: ivp.method
+		});
+
+		return {
+			id: ivp.id,
+			trajectory: response.trajectory,
+			h: ivp.h,
+			n: ivp.n,
+			method: ivp.method,
+			color: ivp.color
+		};
+	}));
 }
 
-export async function calculate(req: IVPRequest): Promise<IVPResult> {
+async function integrate(req: IntegratorRequest): Promise<IntegratorResponse> {
 
 	console.log(`sending: ${JSON.stringify(req)}`);
 

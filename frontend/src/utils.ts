@@ -1,3 +1,19 @@
+let nextId = 0;
+export function getUniqueId() {
+  return (nextId++).toString();
+}
+
+/*
+ * Serialization here
+ */
+
+export function stringifyPoint(s: Point | null): string {
+	if (s === null) {
+		return "";
+	} else {
+		return `(${s.join(", ")})`;
+	}
+}
 export function parsePoint2D(s: string) : Point | null {
 	const point = parsePoint(s);
 	if (point === null || point.length !== 2) {
@@ -7,20 +23,7 @@ export function parsePoint2D(s: string) : Point | null {
 	}
 }
 
-export function parsePoints4D(s: string): PointState[] | null {
-	const points = s.split(";")
-		.map((fragment: string) => parsePoint(fragment.trim()));
-
-	if (points.includes(null)) {
-		return null;
-	} else {
-		return (points as Point[]).map((p: Point) => {
-			return {x: [p[0], p[1]], v: [p[2], p[3]]};
-		})
-	}
-}
-
-function parsePoint(s: string) : Point | null {
+export function parsePoint(s: string) : Point | null {
 	if (s.length === 0 || s[0] !== "(" || s[s.length - 1] !== ")") {
 		return null;
 	} else {
@@ -36,14 +39,6 @@ function parsePoint(s: string) : Point | null {
 	}
 }
 
-export function stringifyPoints(ps: PointState[] | null) : string | null {
-	if (ps === null) {
-		return null;
-	} else {
-		return ps.map((p) => `(${p.x[0]}, ${p.x[1]}, ${p.v[0]}, ${p.v[1]})`).join(";");
-	}
-}
-
 export function parseH(s: string) : number | null {
     const val = parseFloat(s);
     return val ? val : null;
@@ -52,4 +47,12 @@ export function parseH(s: string) : number | null {
 export function parseN(s: string) : number | null {
     const val = parseInt(s);
     return val > 0 ? val : null;
+}
+
+export function parseMethod(s: string) : Method | null {
+	if (s === "Forward Euler" || s === "Backward Euler" || s === "RK4") {
+		return s;
+	} else {
+		return null;
+	}
 }
