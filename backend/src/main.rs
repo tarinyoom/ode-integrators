@@ -12,9 +12,11 @@ struct Point {
 
 #[derive(Deserialize)]
 struct IVPRequest {
-    init: Point,
+    x0: [f64; 2],
+    v0: [f64; 2],
     n: i32,
     h: f64,
+    method: String
 }
 
 #[tokio::main]
@@ -35,7 +37,7 @@ async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
 
 fn integrate(req: IVPRequest) -> Vec<Point> {
     let mut trajectory: Vec<Point> = Vec::new();
-    trajectory.push(req.init);
+    trajectory.push(Point{x: req.x0, v: req.v0});
     
     for _ in 1..req.n {
         let p = trajectory.last().expect("This should be impossible");
