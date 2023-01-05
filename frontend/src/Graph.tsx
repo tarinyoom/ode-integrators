@@ -74,7 +74,7 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep].x[0]))
 					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep].x[1]))
 					.attr("r", "1px")
-					.attr("fill", "#FFFFFF")
+					.attr("fill", result.color)
 
 				async function animate() {
 
@@ -96,7 +96,7 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 
 				svg.append("path")
 				.attr("fill", "none")
-				.attr("stroke", "#FFFFFF")
+				.attr("stroke", result.color)
 				.attr("stroke-width", "0.15px")
 				.attr("d", d3.line()(
 					result.trajectory.map(point => {

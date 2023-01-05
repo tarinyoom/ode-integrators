@@ -30,6 +30,13 @@ function App() {
     setIVPs(IVPs.concat(ivp));
   }
 
+  function forgetIVP(id: string) {
+    const ivpClone = [...IVPs];
+    const arrIdx = ivpClone.findIndex((ivp) => ivp.id === id);
+    ivpClone.splice(arrIdx, 1);
+    setIVPs(ivpClone);
+  }
+
   return (
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
@@ -44,7 +51,7 @@ function App() {
       </Box>
 
 
-      <TableView ivps={IVPs} record={recordIVP}/>
+      <TableView ivps={IVPs} record={recordIVP} forget={forgetIVP} />
       <Box margin={"15px"}>
           <Button variant="contained" onClick={async () => {
             setData(await solveAll(IVPs));

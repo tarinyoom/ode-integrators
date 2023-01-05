@@ -1,3 +1,5 @@
+const MAX_COLOR_VAL = 16777216;
+
 let nextId = 0;
 export function getUniqueId() {
   return (nextId++).toString();
@@ -54,6 +56,20 @@ export function parseN(s: string) : number | null {
 export function parseMethod(s: string) : Method | null {
 	if (s === "Forward Euler" || s === "Backward Euler" || s === "RK4") {
 		return s;
+	} else {
+		return null;
+	}
+}
+
+export function parseColor(s: string) : string | null {
+	if (s.length > 0 && s[0] === "#") {
+		const suffix = s.substring(1);
+		const val = parseInt(suffix, 16);
+		if (!Number.isNaN(val) && val < MAX_COLOR_VAL) { 
+			return s;
+		} else {
+			return null;
+		}
 	} else {
 		return null;
 	}
