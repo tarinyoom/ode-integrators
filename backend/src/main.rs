@@ -1,12 +1,13 @@
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
 use nalgebra::{Vector2};
-const GRAVITY: f64 = 6.6743;
 
 use serde::{Deserialize, Serialize};
 
 type Vector = Vector2<f64>;
 type Scalar = f64;
+type Force  = Vector;
+type Position = Vector;
 
 #[derive(Deserialize, Serialize)]
 struct Point {
@@ -41,57 +42,53 @@ async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
 
 fn integrate(req: IVPRequest) -> Vec<Point> {
 
-    if req.method == "RK4" {
-        return integrate_rk4(req);
-    } else if req.method == "Backward Euler" {
-        return integrate_fe(req);
-    } else {
-        return integrate_fe(req);
+    let step = {
+        if req.method == "RK4" {
+            step_rk4
+        } else {
+            step_fe
+        }
+    };
+    
+    let mut trajectory: Vec<Point> = Vec::new();
+    trajectory.push(Point{x: req.x0, v: req.v0});
+    
+    for _ in 1..req.n {
+        let p = trajectory.last().expect("This should be impossible");
+        trajectory.push(step(&p, force_origin_attractor, req.h));
     }
+    
+    trajectory
 }
 
-fn test_force(x: Vector) -> Vector {
+fn force_origin_attractor(x: Vector) -> Vector {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
-    -x * GRAVITY / d2
+    -x * 6.6743 / d2
 }
 
-fn step_rk4(x: Vector, f: fn(Vector) -> Vector, h: Scalar) -> Vector {
-    let k1 = f(x);
-    let k2 = f(x + k1 * h / 2.);
-    let k3 = f(x + k2 * h / 2.);
-    let k4 = f(x + k3 * h);
-    
-    x + (k1 + 2. * k2 + 2. * k3 + k4) * h / 6.
-}
-
-fn integrate_fe(req: IVPRequest) -> Vec<Point> {
-    let mut trajectory: Vec<Point> = Vec::new();
-    trajectory.push(Point{x: req.x0, v: req.v0});
-    
-    for _ in 1..req.n {
-        let p = trajectory.last().expect("This should be impossible");
-        trajectory.push(
-            Point {
-                x: p.x + req.h * p.v, 
-                v: p.v + req.h * test_force(p.x)
-            });
+fn step_fe(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
+    Point {
+        x: y.x + h * y.v,
+        v: y.v + h * f(y.x)
     }
-    
-    trajectory
 }
 
-fn integrate_rk4(req: IVPRequest) -> Vec<Point> {
-    let mut trajectory: Vec<Point> = Vec::new();
-    trajectory.push(Point{x: req.x0, v: req.v0});
+fn step_rk4(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
+    // k1 through k4 for dx, l1 through l4 for dv
+    let k1 = y.v;
+    let l1 = f(y.x);
     
-    for _ in 1..req.n {
-        let p = trajectory.last().expect("This should be impossible");
-        trajectory.push(
-            Point {
-                x: step_rk4(p.x, test_force, req.h), 
-                v: step_rk4(p.v, test_force, req.h)
-            });
+    let k2 = y.v + h * l1 / 2.;
+    let l2 = f(y.x + h * k1 / 2.);
+    
+    let k3 = y.v + h * l2 / 2.;
+    let l3 = f(y.x + h * k2 / 2.);
+    
+    let k4 = y.v + h * l3;
+    let l4 = f(y.x + h * k3);
+    
+    Point {
+        x: y.x + h * (k1 + 2. * k2 + 2. * k3 + k4) / 6.,
+        v: y.v + h * (l1 + 2. * l2 + 2. * l3 + l4) / 6.
     }
-    
-    trajectory
 }
