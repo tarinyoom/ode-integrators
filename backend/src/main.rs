@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 
 type Vector = Vector2<f64>;
 type Scalar = f64;
+type Force  = Vector;
+type Position = Vector;
 
 #[derive(Deserialize, Serialize)]
 struct Point {
@@ -55,15 +57,6 @@ fn test_force(x: Vector) -> Vector {
     -x * GRAVITY / d2
 }
 
-fn step_rk4(x: Vector, f: fn(Vector) -> Vector, h: Scalar) -> Vector {
-    let k1 = f(x);
-    let k2 = f(x + k1 * h / 2.);
-    let k3 = f(x + k2 * h / 2.);
-    let k4 = f(x + k3 * h);
-    
-    x + (k1 + 2. * k2 + 2. * k3 + k4) * h / 6.
-}
-
 fn integrate_fe(req: IVPRequest) -> Vec<Point> {
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(Point{x: req.x0, v: req.v0});
@@ -80,17 +73,33 @@ fn integrate_fe(req: IVPRequest) -> Vec<Point> {
     trajectory
 }
 
+fn step_rk4(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
+    // k1 through k4 for dx, l1 through l4 for dv
+    let k1 = h * y.v;
+    let l1 = h * f(y.x);
+    
+    let k2 = h * (y.v + l1 / 2.);
+    let l2 = h * f(y.x + k1 / 2.);
+    
+    let k3 = h * (y.v + l2 / 2.);
+    let l3 = h * f(y.x + k2 / 2.);
+    
+    let k4 = h * (y.v + l3);
+    let l4 = h * f(y.x + k3);
+    
+    Point {
+        x: y.x + (k1 + 2. * k2 + 2. * k3 + k4) / 6.,
+        v: y.v + (l1 + 2. * l2 + 2. * l3 + l4) / 6.
+    }
+}
+
 fn integrate_rk4(req: IVPRequest) -> Vec<Point> {
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(Point{x: req.x0, v: req.v0});
     
     for _ in 1..req.n {
         let p = trajectory.last().expect("This should be impossible");
-        trajectory.push(
-            Point {
-                x: step_rk4(p.x, test_force, req.h), 
-                v: step_rk4(p.v, test_force, req.h)
-            });
+        trajectory.push(step_rk4(&p, test_force, req.h));
     }
     
     trajectory
