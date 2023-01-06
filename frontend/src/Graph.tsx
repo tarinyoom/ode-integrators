@@ -8,7 +8,7 @@ const DATA_MARGIN = 1.3; // margin around data points within graph
 const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 
 	const ref = useRef<any>();
-	let animationStep = 0;
+	let animationStep = data === undefined ? [] : data.map(_ => 0);
 	let rendered = false;
 
 	function render() {
@@ -71,22 +71,22 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 			data.forEach((result: IVPSolution, i: number) => {
 
 				const pt = svg.append("circle")
-					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep].x[0]))
-					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep].x[1]))
+					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
+					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
 					.attr("r", "1px")
 					.attr("fill", result.color)
 
 				async function animate() {
 
-					if (animationStep >= result.trajectory.length) {
+					if (animationStep[i] >= result.trajectory.length) {
 						return;
 					} else {
 						pt.transition()
 							.duration(1000 * result.h)
-							.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep].x[0]))
-							.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep].x[1]))
+							.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
+							.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
 							.on("end", () => {
-								animationStep++;
+								animationStep[i]++;
 								animate();
 							});
 					}
