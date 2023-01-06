@@ -1,5 +1,5 @@
 type Point = number[];
-type Method = "Forward Euler" | "Backward Euler" | "RK4";
+type Method = "Forward Euler" | "RK4";
 
 type IVP = {
 	id: string,

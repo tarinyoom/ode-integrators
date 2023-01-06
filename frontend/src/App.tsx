@@ -16,7 +16,10 @@ function App() {
     }
   });
 
-  const DEFAULT_IVPS: IVP[] = [{id: getUniqueId(), x0: [1, 0], v0: [0, 1], h: 0.1, n: 1000, method: "Forward Euler", color: "#FFFFFF"}];
+  const DEFAULT_IVPS: IVP[] = [
+    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "Forward Euler", color: "#FFFF00"},
+    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "RK4", color: "#00FFFF"}
+  ];
 
   const [IVPs, setIVPs] = useState<IVP[]>(DEFAULT_IVPS);
   const [data, setData] = useState<IVPSolution[]>();

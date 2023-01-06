@@ -136,7 +136,6 @@ function TableView(
 						}}
 					>
 						<MenuItem value={"Forward Euler"}>Forward Euler</MenuItem>
-						<MenuItem value={"Backward Euler"}>Backward Euler</MenuItem>
 						<MenuItem value={"RK4"}>RK4</MenuItem>
 					</Select>
 				</FormControl>
