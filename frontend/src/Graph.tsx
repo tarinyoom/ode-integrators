@@ -34,10 +34,12 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 				.attr("width", width)
 				.attr("height", height);
 
+			const cover = data.reduce<PointState[]>((acc, curr) => acc.concat(curr.trajectory), []);
+
 			// calculate domains to show all data points nicely
 			const extents = [
-				d3.extent(data[0].trajectory.map(d => d.x[0])), 
-				d3.extent(data[0].trajectory.map(d => d.x[1]))
+				d3.extent(cover.map(d => d.x[0])), 
+				d3.extent(cover.map(d => d.x[1]))
 			] as [number, number][];
 
 			const scale  = extents

@@ -1,4 +1,8 @@
 type Point = number[];
+type PointState = {
+	x: Point,
+	v: Point
+}
 type Method = "Forward Euler" | "RK4";
 
 type IVP = {
@@ -30,10 +34,7 @@ type IntegratorRequest = {
 }
 
 type IntegratorResponse = {
-	trajectory: {
-		x: Point,
-		v: Point
-	}[]
+	trajectory: PointState[]
 }
 
 type IVPSolution = {
