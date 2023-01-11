@@ -53,11 +53,11 @@ export function parseN(s: string) : number | null {
     return val > 0 ? val : null;
 }
 
-export function parseMethod(s: string) : Method | null {
+export function parseMethod(s: string | null) : Method | "" {
 	if (s === "Forward Euler" || s === "RK4") {
 		return s;
 	} else {
-		return null;
+		return "";
 	}
 }
 

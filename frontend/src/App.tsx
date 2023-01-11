@@ -6,7 +6,7 @@ import './App.css';
 import Graph from './Graph';
 import { Box } from '@mui/material';
 import { solveAll } from './backendSurface';
-import TableView from './TableView';
+import TableView from './views/TableView';
 import { getUniqueId } from './utils';
 
 function App() {
@@ -16,28 +16,11 @@ function App() {
     }
   });
 
-  const DEFAULT_IVPS: IVP[] = [
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "Forward Euler", color: "#FFFF00"},
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "RK4", color: "#00FFFF"}
-  ];
-
-  const [IVPs, setIVPs] = useState<IVP[]>(DEFAULT_IVPS);
   const [data, setData] = useState<IVPSolution[]>();
+  let getData: () => IVP[];
 
-  function recordIVP(x0: number[], v0: number[], h: number, n: number, method: string, color: string) {
-    
-    const ivp = {
-      id: getUniqueId(), x0, v0, h, n, method, color
-    };
-
-    setIVPs(IVPs.concat(ivp));
-  }
-
-  function forgetIVP(id: string) {
-    const ivpClone = [...IVPs];
-    const arrIdx = ivpClone.findIndex((ivp) => ivp.id === id);
-    ivpClone.splice(arrIdx, 1);
-    setIVPs(ivpClone);
+  function registerGetData(getter: (() => IVP[])) {
+    getData = getter;
   }
 
   return (
@@ -54,10 +37,10 @@ function App() {
       </Box>
 
 
-      <TableView ivps={IVPs} record={recordIVP} forget={forgetIVP} />
+      <TableView register={registerGetData} />
       <Box margin={"15px"}>
           <Button variant="contained" onClick={async () => {
-            setData(await solveAll(IVPs));
+            setData(await solveAll(getData()));
           }}>Integrate!</Button>
       </Box>
 
