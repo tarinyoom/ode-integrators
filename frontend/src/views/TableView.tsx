@@ -18,8 +18,8 @@ import Select from '@mui/material/Select';
 import { getUniqueId } from '../utils';
 
 const DEFAULT_IVPS: PartialIVP[] = [
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "Forward Euler", color: "#FFFF00"},
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 10000, method: "RK4", color: "#00FFFF"}
+    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 7566, method: "Forward Euler", color: "#FFFF00"},
+    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 7566, method: "RK4", color: "#00FFFF"}
 ];
 
 function getNewIVP(): PartialIVP {
