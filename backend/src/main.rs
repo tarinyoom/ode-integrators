@@ -53,7 +53,7 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(Point{x: req.x0, v: req.v0});
     
-    for _ in 1..req.n {
+    for _ in 0..req.n {
         let p = trajectory.last().expect("This should be impossible");
         trajectory.push(step(&p, force_origin_attractor, req.h));
     }
