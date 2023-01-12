@@ -32,8 +32,8 @@ function App() {
         <h3>Numerical Integration Playground</h3>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"10vh"}>
-        <p>Plot the trajectory of massless points through a force field!</p>
+      <Box display="flex" justifyContent="center" height={"15vh"}>
+        <p>What if we shot a marble into space?</p>
       </Box>
 
 
