@@ -7,7 +7,7 @@ import Graph from './Graph';
 import { Box } from '@mui/material';
 import { solveAll } from './backendSurface';
 import TableView from './views/TableView';
-import { getUniqueId } from './utils';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   const darkTheme = createTheme({
@@ -18,6 +18,8 @@ function App() {
 
   const [data, setData] = useState<IVPSolution[]>();
   let getData: () => IVP[];
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   function registerGetData(getter: (() => IVP[])) {
     getData = getter;
@@ -40,12 +42,22 @@ function App() {
       <TableView register={registerGetData} />
       <Box margin={"15px"}>
           <Button variant="contained" onClick={async () => {
-            setData(await solveAll(getData()));
+            setLoading(true);
+            solveAll(getData()).then((data) => {
+              setLoading(false);
+              setData(data);
+            })
           }}>Integrate!</Button>
       </Box>
 
       <Box margin="auto" display="flex" height={"70vh"} width={"90vw"}>
-        <Graph data={data}/>
+        <Box hidden={loading} width={"100%"} height={"100%"}>
+          <Graph data={data} />
+        </Box>
+        
+        <Box hidden={!loading} padding={"30vh"} width={"100%"} height={"100%"} >
+          <CircularProgress size={"10vh"}/>
+        </Box>
         
       </Box>
 
