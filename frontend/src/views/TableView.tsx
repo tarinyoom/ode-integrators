@@ -24,7 +24,7 @@ const DEFAULT_IVPS: PartialIVP[] = [
 
 function getNewIVP(): PartialIVP {
 	return {
-		id: getUniqueId(), x0: null, v0: null, h: null, n: null, method: "", color: "#FFFFFF"
+		id: getUniqueId(), x0: [3, 0], v0: [0, 3], h: 0.02, n: 5000, method: "Forward Euler", color: "#FFFFFF"
 	}
 }
 
