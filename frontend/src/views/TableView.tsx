@@ -8,7 +8,7 @@ import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
 import React, { useState } from 'react';
-import { parseH, parseMethod, parseN, parsePoint2D, parseColor } from '../utils';
+import { parseH, parseMethod, parseN, parsePoint2D, parseColor, parsePoint } from '../utils';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,13 +18,13 @@ import Select from '@mui/material/Select';
 import { getUniqueId } from '../utils';
 
 const DEFAULT_IVPS: PartialIVP[] = [
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 7566, method: "Forward Euler", color: "#FFFF00"},
-    {id: getUniqueId(), x0: [2, 0], v0: [0, 2], h: 0.01, n: 7566, method: "RK4", color: "#00FFFF"}
+    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "Forward Euler", color: "#FFFF00"},
+    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "RK4", color: "#00FFFF"}
 ];
 
 function getNewIVP(): PartialIVP {
 	return {
-		id: getUniqueId(), x0: [3, 0], v0: [0, 3], h: 0.02, n: 5000, method: "Forward Euler", color: "#FFFFFF"
+		id: getUniqueId(), x0: "(3, 0)", v0: "(0, 3)", h: "0.01", n: "10000", method: "Forward Euler", color: "#FFFFFF"
 	}
 }
 
@@ -60,18 +60,23 @@ function TableView(
 	}
 
 	function validate(partials: PartialIVP[]): IVP[] {
-		const validated = partials.map(partial => {
-			if (partial.color !== null &&
-				partial.h !== null &&
-				partial.method !== null &&
-				partial.n !== null &&
-				partial.v0 !== null &&
-				partial.x0 !== null) {
-					return partial;
-				} else {
-					return undefined;
+		const validated: (IVP | undefined)[] = partials.map(partial => {
+			const color = parseColor(partial.color);
+			const h = parseH(partial.h);
+			const method = parseMethod(partial.method);
+			const n = parseN(partial.n);
+			const v0 = parsePoint2D(partial.v0);
+			const x0 = parsePoint2D(partial.x0);
+
+			if (color !== null && h !== null && method !== null && n !== null && n !== null && v0 !== null && x0 !== null) {
+				return {
+					id: partial.id,
+					color, h, method, n, v0, x0
 				}
-		}) as (IVP | undefined)[];
+			} else {
+				return undefined;
+			}
+		});
 
 		if (validated.includes(undefined)) {
 			console.log("could not validate all rows. proceeding with just some");
@@ -113,36 +118,36 @@ function TableView(
 				<TableCell align="center">
 				<Input 
 						value={ivp.x0}
-						error={ivp.x0===null}
+						error={parsePoint2D(ivp.x0) === null}
 						onChange={(e) => {
-							modifyIvp(ivp.id, ivp => {ivp.x0 = parsePoint2D(e.target.value)});
+							modifyIvp(ivp.id, ivp => {ivp.x0 = e.target.value});
 					}}/>	
 				</TableCell>
 
 				<TableCell align="center">
 				<Input 
 						value={ivp.v0}
-						error={ivp.v0===null}
+						error={parsePoint2D(ivp.v0) === null}
 						onChange={(e) => {
-							modifyIvp(ivp.id, ivp => {ivp.v0 = parsePoint2D(e.target.value)});
+							modifyIvp(ivp.id, ivp => {ivp.v0 = e.target.value});
 					}}/>
 				</TableCell>
 
 				<TableCell align="center">
 				<Input 
 						value={ivp.h}
-						error={ivp.h===null}
+						error={parseH(ivp.h) === null}
 						onChange={(e) => {
-							modifyIvp(ivp.id, ivp => {ivp.h = parseH(e.target.value)});
+							modifyIvp(ivp.id, ivp => {ivp.h = e.target.value});
 					}}/>
 				</TableCell>
 
 				<TableCell align="center">
 				<Input 
 						value={ivp.n}
-						error={ivp.n===null}
+						error={parseN(ivp.n) === null}
 						onChange={(e) => {
-							modifyIvp(ivp.id, ivp => {ivp.n = parseN(e.target.value)});
+							modifyIvp(ivp.id, ivp => {ivp.n = e.target.value});
 					}}/>
 				</TableCell>
 
@@ -161,7 +166,14 @@ function TableView(
 					</FormControl>
 				</TableCell>
 
-				<TableCell align="center">{ivp.color}</TableCell>
+				<TableCell align="center">
+				<Input 
+						value={ivp.color}
+						error={parseColor(ivp.color) === null}
+						onChange={(e) => {
+							modifyIvp(ivp.id, ivp => {ivp.color = e.target.value});
+					}}/>
+				</TableCell>
 			  </TableRow>
 			))}
 		  </TableBody>

@@ -17,12 +17,12 @@ type IVP = {
 
 type PartialIVP = {
 	id: string,
-	x0: Point | null,
-	v0: Point | null,
-	h: number | null,
-	n: number | null,
+	x0: string,
+	v0: string,
+	h: string,
+	n: string,
 	method: string,
-	color: string | null
+	color: string
 }
 
 type IntegratorRequest = {
