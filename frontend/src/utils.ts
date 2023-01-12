@@ -50,7 +50,7 @@ export function parseH(s: string) : number | null {
 
 export function parseN(s: string) : number | null {
     const val = parseInt(s);
-    return val > 0 ? val : null;
+    return val > 0 && val <= 65000 ? val : null;
 }
 
 export function parseMethod(s: string | null) : Method | "" {
