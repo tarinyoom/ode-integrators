@@ -21,6 +21,7 @@ struct IVPRequest {
     v0: Vector,
     n: i32,
     h: Scalar,
+    field: String,
     method: String
 }
 
@@ -50,12 +51,20 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
         }
     };
     
+    let field = {
+        if req.field == "single_repulsor" {
+            force_origin_repulsor
+        } else {
+            force_origin_attractor
+        }
+    };
+    
     let mut trajectory: Vec<Point> = Vec::new();
     trajectory.push(Point{x: req.x0, v: req.v0});
     
     for _ in 0..req.n {
         let p = trajectory.last().expect("This should be impossible");
-        trajectory.push(step(&p, force_origin_attractor, req.h));
+        trajectory.push(step(&p, field, req.h));
     }
     
     trajectory
@@ -64,6 +73,19 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
 fn force_origin_attractor(x: Vector) -> Vector {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
     -x * 6.6743 / d2
+}
+
+fn force_origin_repulsor(x: Vector) -> Vector {
+    let d2 = x[0].powf(2.) + x[1].powf(2.);
+    let penalty = {
+        if d2 > 9. {
+            (9. - d2) * 200.
+        } else {
+            0.
+        }
+    };
+    
+    x * (6.6743 / d2 + penalty)
 }
 
 fn step_fe(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
