@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { parseH, parseMethod, parseN, parsePoint2D, parseColor, parsePoint } from './utils';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { getUniqueId } from './utils';
+import Tooltip from '@mui/material/Tooltip';
 
 const DEFAULT_IVPS: PartialIVP[] = [
     {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "RK4", color: "#FF00FF"},
@@ -94,12 +95,12 @@ function TableView(
 		  <TableHead>
 			<TableRow>
 			  <TableCell align="center"></TableCell>
-			  <TableCell align="center">x<sub>0</sub></TableCell>
-			  <TableCell align="center">v<sub>0</sub></TableCell>
-			  <TableCell align="center">&#916;t</TableCell>
-			  <TableCell align="center">n<sub>iters</sub></TableCell>
-			  <TableCell align="center">Method</TableCell>
-			  <TableCell align="center">Color</TableCell>
+			  <TableCell align="center"><Tooltip title="Initial Position" placement="top"><p>x<sub>0</sub></p></Tooltip></TableCell>
+			  <TableCell align="center"><Tooltip title="Initial Velocity" placement="top"><p>v<sub>0</sub></p></Tooltip></TableCell>
+			  <TableCell align="center"><Tooltip title="Time Step" placement="top"><p>&#916;t</p></Tooltip></TableCell>
+			  <TableCell align="center"><Tooltip title="Number of Iterations" placement="top"><p>n<sub>iters</sub></p></Tooltip></TableCell>
+			  <TableCell align="center"><Tooltip title="Integration Method" placement="top"><p>Method</p></Tooltip></TableCell>
+			  <TableCell align="center"><Tooltip title="Trace Color" placement="top"><p>Color</p></Tooltip></TableCell>
 			</TableRow>
 		  </TableHead>
 
@@ -110,9 +111,11 @@ function TableView(
 				sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 			  >
 				<TableCell align="center">
+				  <Tooltip title="Remove this IVP" placement="top">
 					<Button onClick={() => {removeIvp(ivp.id)}}>
 						<RemoveCircleIcon />
 					</Button>
+				  </Tooltip>
 				</TableCell>
 
 				<TableCell align="center">
@@ -181,10 +184,11 @@ function TableView(
 		  <TableFooter>
 		  	<TableRow>
 			  <TableCell colSpan={Number.MAX_SAFE_INTEGER} align="center">
-			  <Button onClick={addIvp}>
-				<AddCircleIcon />
-			  </Button>
-
+			  <Tooltip title="Add new IVP!" placement="top">
+				<Button onClick={addIvp}>
+					<AddCircleIcon />
+				</Button>
+			  </Tooltip>
 			  </TableCell>
 			</TableRow>
 		  </TableFooter>

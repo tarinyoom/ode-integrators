@@ -22,18 +22,17 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 		const svg = d3.select<BaseType, any>(ref.current)
 
 		svg.selectAll('*').remove();
+
+		// Kind of hacky, is there a better way to find width/height of the image?
+		const width = parseInt(svg.style("width"));
+		const height = parseInt(svg.style("height"));
+		const graphDims = [width - MARGIN.left - MARGIN.right, height - MARGIN.top - MARGIN.bottom];
+		svg.append("rect")
+		.attr("fill", "0x000000")
+		.attr("width", width)
+		.attr("height", height);
 	
 		if (data !== undefined && data.length > 0) {
-			// Kind of hacky, is there a better way to find width/height of the image?
-			const width = parseInt(svg.style("width"));
-			const height = parseInt(svg.style("height"));
-			const graphDims = [width - MARGIN.left - MARGIN.right, height - MARGIN.top - MARGIN.bottom];
-
-			svg.append("rect")
-				.attr("fill", "0x000000")
-				.attr("width", width)
-				.attr("height", height);
-
 			const cover = data.reduce<PointState[]>((acc, curr) => acc.concat(curr.trajectory), []);
 
 			// calculate domains to show all data points nicely

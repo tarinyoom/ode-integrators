@@ -40,6 +40,10 @@ function App() {
         <h3>Parallel Integration</h3>
       </Box>
 
+      <Box display="flex" justifyContent="center" height={"10vh"}>
+        <p>Specify a list of initial conditions and integrate in parallel:</p>
+      </Box>
+
       <TableView register={registerGetData} />
       <Box margin={"15px"}>
           <Button variant="contained" onClick={async () => {
@@ -52,13 +56,13 @@ function App() {
           }}>Integrate!</Button>
       </Box>
 
-      <Box hidden={!init} margin="auto" display="flex" height={"70vh"} width={"90vw"}>
+      <Box hidden={!init} margin="auto" display="flex" height={"90vh"} width={"90vw"}>
         <Box hidden={loading} width={"100%"} height={"100%"}>
           <Graph data={data} />
         </Box>
         
-        <Box hidden={!loading} padding={"30vh"} width={"100%"} height={"100%"} >
-          <CircularProgress size={"10vh"}/>
+        <Box hidden={!loading} padding={"35vh"} width={"100%"} height={"100%"} >
+          <CircularProgress size={"20vh"}/>
         </Box>
       </Box>
 
