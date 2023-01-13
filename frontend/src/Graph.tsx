@@ -72,6 +72,18 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 
 			data.forEach((result: IVPSolution, i: number) => {
 
+				function transformPoint(point: PointState): [number, number] {
+					return [MARGIN.left + xScale(point.x[0]), MARGIN.top + yScale(point.x[1])];
+				}
+
+				let shownPoints = [transformPoint(result.trajectory[0])];
+
+				const path = svg.append("path")
+				.attr("fill", "none")
+				.attr("stroke", result.color)
+				.attr("stroke-width", "0.3px")
+				.attr("d", d3.line()(shownPoints));
+
 				const pt = svg.append("circle")
 					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
 					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
@@ -79,6 +91,9 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 					.attr("fill", result.color)
 
 				async function animate() {
+
+					shownPoints.push(transformPoint(result.trajectory[animationStep[i]]));
+					path.attr("d", d3.line()(shownPoints));
 
 					if (animationStep[i] >= result.trajectory.length) {
 						return;
@@ -95,16 +110,6 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 				}
 
 				animate();
-
-				svg.append("path")
-				.attr("fill", "none")
-				.attr("stroke", result.color)
-				.attr("stroke-width", "0.15px")
-				.attr("d", d3.line()(
-					result.trajectory.map(point => {
-						return [MARGIN.left + xScale(point.x[0]), MARGIN.top + yScale(point.x[1])];
-					})));
-
 				})
 		}
 	}
