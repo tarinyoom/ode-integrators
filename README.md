@@ -1,5 +1,5 @@
 # ODE Integration Playground
-Web tool for solving 2nd order ODEs. Calculates in parallel numerical olutions to multiple IVPs at once, allowing the user to vary both the initial conditions, as well as the method and parameters of numerical integration. Since the backend is a lambda, these IVPs can be solved simultaneously. 
+Web tool for solving 2nd order ODEs. Calculates in parallel numerical olutions to multiple IVPs at once, allowing the user to vary both the initial conditions, as well as the method and parameters of numerical integration. Since the backend is a lambda, these IVPs can be solved simultaneously. [(web demo)](https://ode.tarinyoom.io/)
 
 ## Repository Structure
 
