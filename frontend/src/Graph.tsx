@@ -78,6 +78,13 @@ const Graph = ({data, field}:
 					.attr("r", "3px")
 					.attr("fill", "#FFFFFF");
 					break;
+				case "single_repulsor":
+					dressing.append("circle")
+					.attr("cx", MARGIN.left + xScale(0))
+					.attr("cy", MARGIN.top + yScale(0))
+					.attr("r", "3px")
+					.attr("fill", "#FF0000");
+					break;
 				default:
 					break;
 			}

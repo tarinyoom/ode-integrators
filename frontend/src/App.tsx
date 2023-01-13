@@ -60,7 +60,7 @@ function App() {
           <Button variant="contained" onClick={async () => {
             setLoading(true);
             setInit(true);
-            solveAll(getInitialConditions()).then((data) => {
+            solveAll(getInitialConditions(), getField()).then((data) => {
               setLoading(false);
               setData(data);
               setField(getField());

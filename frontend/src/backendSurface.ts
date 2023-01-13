@@ -3,7 +3,7 @@ import testData from "./testData.json";
 const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us-west-1.on.aws/";
 const ONLINE = true;
 
-export async function solveAll(problems: IVP[]): Promise<IVPSolution[]> {
+export async function solveAll(problems: IVP[], field: string): Promise<IVPSolution[]> {
 
 	return Promise.all(problems.map(async ivp => {
 
@@ -12,6 +12,7 @@ export async function solveAll(problems: IVP[]): Promise<IVPSolution[]> {
 			v0: ivp.v0,
 			h: ivp.h,
 			n: ivp.n,
+			field: field,
 			method: ivp.method
 		});
 

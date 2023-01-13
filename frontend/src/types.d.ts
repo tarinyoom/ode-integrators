@@ -30,6 +30,7 @@ type IntegratorRequest = {
 	v0: Point,
 	h: number,
 	n: number,
+	field: string,
 	method: string
 }
 
