@@ -1,12 +1,14 @@
 # ODE Integration Playground
-Interactive web tool for solving ODEs.
+Web tool for solving 2nd order ODEs. Calculates in parallel numerical olutions to multiple IVPs at once, allowing the user to vary both the initial conditions, as well as the method and parameters of numerical integration. Since the backend is a lambda, these IVPs can be solved simultaneously. 
 
 ## Repository Structure
-### Frontend
-React website using create-react-app. The website features an interface where the user can specify their IVP, and displays the calculated solution in the browser.
 
 ### Backend
-AWS lambda backend, written in TypeScript. Backend takes in a query from the front end, makes appropriate parallel calls to the backend, and composes the results into an svg image to be returned to the frontend. 
+AWS lambda backend, written in Rust. Backend takes in a single IVP and returns a numerical solution to that IVP.
 
-### Integrator
-Helper AWS lambda service written in Rust. The integrator takes in an IVP problem and returns the corresponding solution sequence.
+### Frontend
+React website using create-react-app. The website features an interface where the user can specify their IVPs, and then plays an animation based on their solutions.
+
+Open Tasks:
+Implement Backward Euler
+(bug) animations for trajectories calculated with different time steps are not correctly synchronized, since each animation is played independently.
