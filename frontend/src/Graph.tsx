@@ -34,7 +34,7 @@ const Graph = ({data, field}:
 		const width = parseInt(svg.style("width"));
 		const height = parseInt(svg.style("height"));
 		const graphDims = [width - MARGIN.left - MARGIN.right, height - MARGIN.top - MARGIN.bottom];
-		svg.append("rect")
+		const background = svg.append("rect")
 		.attr("fill", "0x000000")
 		.attr("width", width)
 		.attr("height", height);
@@ -79,11 +79,20 @@ const Graph = ({data, field}:
 					.attr("fill", "#FFFFFF");
 					break;
 				case "single_repulsor":
-					dressing.append("circle")
-					.attr("cx", MARGIN.left + xScale(0))
-					.attr("cy", MARGIN.top + yScale(0))
-					.attr("r", "3px")
-					.attr("fill", "#FF0000");
+					
+					background.attr("fill", "#202020");
+
+					svg.append("circle")
+						.attr("cx", MARGIN.left + xScale(0))
+						.attr("cy", MARGIN.top + yScale(0))
+						.attr("r", xScale(3) - xScale(0))
+						.attr("fill", "#000000");
+
+					svg.append("circle")
+						.attr("cx", MARGIN.left + xScale(0))
+						.attr("cy", MARGIN.top + yScale(0))
+						.attr("r", "3px")
+						.attr("fill", "#FF0000");
 					break;
 				default:
 					break;
