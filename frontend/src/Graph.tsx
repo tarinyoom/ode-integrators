@@ -5,7 +5,8 @@ import { BaseType } from 'd3';
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 
-const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
+const Graph = ({data, field}:
+	{data: IVPSolution[] | undefined, field: string}) => {
 
 	const ref = useRef<any>();
 	let animationStep = data === undefined ? [] : data.map(_ => 0);
@@ -31,6 +32,8 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 		.attr("fill", "0x000000")
 		.attr("width", width)
 		.attr("height", height);
+
+		const dressing = svg.append("g");
 	
 		if (data !== undefined && data.length > 0) {
 			const cover = data.reduce<PointState[]>((acc, curr) => acc.concat(curr.trajectory), []);
@@ -60,6 +63,18 @@ const Graph = ({data}:{data: IVPSolution[] | undefined}) => {
 				.scaleLinear()
 				.domain(domains[1])
 				.range([graphDims[1], 0])
+
+			switch (field) {
+				case "single_attractor":
+					dressing.append("circle")
+					.attr("cx", MARGIN.left + xScale(0))
+					.attr("cy", MARGIN.top + yScale(0))
+					.attr("r", "3px")
+					.attr("fill", "#FFFFFF")
+					break;
+				default:
+					break;
+			}
 			
 			svg.append("g")
 				.attr("transform", `translate(${MARGIN.left}, ${graphDims[1] + MARGIN.top})`)
