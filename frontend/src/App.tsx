@@ -78,8 +78,8 @@ function App() {
         </Box>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"15vh"}>
-        <p>
+      <Box display="flex" justifyContent="center" height={"8vh"}>
+        <p style={{"fontSize": "12px"}}>
           By Adam Reynolds <a href="https://github.com/tarinyoom/ode-integrators">(source)</a>
           <br/>
 
