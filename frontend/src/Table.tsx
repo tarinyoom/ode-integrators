@@ -8,18 +8,18 @@ import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
 import React, { useState } from 'react';
-import { parseH, parseMethod, parseN, parsePoint2D, parseColor, parsePoint } from '../utils';
+import { parseH, parseMethod, parseN, parsePoint2D, parseColor, parsePoint } from './utils';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { getUniqueId } from '../utils';
+import { getUniqueId } from './utils';
 
 const DEFAULT_IVPS: PartialIVP[] = [
-    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.0025", n: "30264", method: "Forward Euler", color: "#FFFF00"},
-    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "RK4", color: "#00FFFF"}
+    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "RK4", color: "#FF00FF"},
+    {id: getUniqueId(), x0: "(-2, 0)", v0: "(0, -2)", h: "0.01", n: "7566", method: "RK4", color: "#00FFFF"}
 ];
 
 function getNewIVP(): PartialIVP {
