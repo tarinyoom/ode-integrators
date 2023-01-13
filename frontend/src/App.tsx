@@ -84,10 +84,10 @@ function App() {
           <br/>
 
           <span style={{"fontSize": "16px"}}>
-            <RefIcon href={"https://d3js.org"} src={logoD3} /><sup> &times; </sup>
-            <RefIcon href={"https://reactjs.org/"} src={logoReact} /><sup> + </sup>
-            <RefIcon href={"https://www.rust-lang.org/"} src={logoRust} /><sup> &times; </sup>
-            <RefIcon href={"https://aws.amazon.com/lambda/"} src={logoLambda} />
+            <RefIcon href={"https://d3js.org"} src={logoD3} name={"D3.js"} /><sup> &times; </sup>
+            <RefIcon href={"https://reactjs.org/"} src={logoReact} name={"React"} /><sup> + </sup>
+            <RefIcon href={"https://www.rust-lang.org/"} src={logoRust} name={"Rust"} /><sup> &times; </sup>
+            <RefIcon href={"https://aws.amazon.com/lambda/"} src={logoLambda} name={"AWS Lambda"} />
           </span>
           </p>
       </Box>
