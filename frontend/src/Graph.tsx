@@ -1,6 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { BaseType } from 'd3';
+import { Button, Box } from "@mui/material";
+import Tooltip from '@mui/material/Tooltip';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
@@ -9,6 +12,9 @@ const Graph = ({data, field}:
 	{data: IVPSolution[] | undefined, field: string}) => {
 
 	const ref = useRef<any>();
+
+	const [refresh, setRefresh] = useState<boolean>();
+
 	let animationStep = data === undefined ? [] : data.map(_ => 0);
 	let rendered = false;
 
@@ -70,7 +76,7 @@ const Graph = ({data, field}:
 					.attr("cx", MARGIN.left + xScale(0))
 					.attr("cy", MARGIN.top + yScale(0))
 					.attr("r", "3px")
-					.attr("fill", "#FFFFFF")
+					.attr("fill", "#FFFFFF");
 					break;
 				default:
 					break;
@@ -135,11 +141,21 @@ const Graph = ({data, field}:
 	})
 
 	return (
-		<svg
-			ref={ref}
-			width="100%"
-			height="100%"
-		/>
+		<>
+			<svg
+				ref={ref}
+				width="100%"
+				height="100%"
+			/>
+			<Box sx={{"position": "relative", "top": "-100%", "display":"grid", "justifyItems": "end"}}>
+			<Tooltip title="Replay" placement="left">
+				<Button onClick={() => {
+					setRefresh(!refresh);}}>
+					<ReplayIcon />
+				</Button>
+			</Tooltip>
+			</Box>
+		</>
 	)
   }
 
