@@ -43,6 +43,7 @@ type IVPSolution = {
 	trajectory: PointState[],
 	h: number,
 	n: number,
+	field: string,
 	method: string,
 	color: string
 }

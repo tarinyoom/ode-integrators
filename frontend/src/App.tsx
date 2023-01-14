@@ -9,11 +9,14 @@ import { solveAll } from './backendSurface';
 import Table from './Table';
 import CircularProgress from '@mui/material/CircularProgress';
 import RefIcon from './RefIcon';
+import logoTone from './img/tone.png';
 import logoD3 from './img/d3.png';
 import logoReact from './img/react.png';
 import logoRust from './img/rust.png';
 import logoLambda from './img/lambda.png';
 import FieldSelector from './FieldSelector';
+import * as Tone from 'tone';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function App() {
   const darkTheme = createTheme({
@@ -28,6 +31,8 @@ function App() {
   let getInitialConditions: () => IVP[];
   let getField: () => string;
 
+  let synths: Tone.Synth<Tone.SynthOptions>[] = data === undefined? [] : data.map(_ => new Tone.Synth().toDestination());
+
   const [loading, setLoading] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(false);
 
@@ -37,6 +42,14 @@ function App() {
 
   function registerGetField(getter: (() => string)) {
     getField = getter;
+  }
+
+  function integrate() {
+    solveAll(getInitialConditions(), getField()).then((data) => {
+      setLoading(false);
+      setData(data);
+      setField(getField());
+    }) 
   }
 
   return (
@@ -49,7 +62,7 @@ function App() {
       </Box>
 
       <Box display="flex" justifyContent="center" height={"10vh"}>
-        <p>Specify a list of initial conditions and integrate in parallel:</p>
+        <p>Numerical integration with sound. Set your IVPs and integrate!</p>
       </Box>
 
       <Table register={registerGetInitialConditions} />
@@ -60,17 +73,22 @@ function App() {
           <Button variant="contained" onClick={async () => {
             setLoading(true);
             setInit(true);
-            solveAll(getInitialConditions(), getField()).then((data) => {
-              setLoading(false);
-              setData(data);
-              setField(getField());
+            synths.forEach((synth) => {
+              synth.triggerRelease();
             })
-          }}>Integrate!</Button>
+            if (!init) {
+              await Tone.start().then(() => {
+                integrate();
+              })  
+            } else {
+              integrate();
+            }
+          }}>Integrate</Button>
       </Box>
 
       <Box hidden={!init} margin="auto" display="flex" height={"90vh"} width={"90vw"}>
         <Box hidden={loading} width={"100%"} height={"100%"}>
-          <Graph data={data} field={field} />
+          <Graph data={data} field={field} synths={synths}/>
         </Box>
         
         <Box hidden={!loading} padding={"35vh"} width={"100%"} height={"100%"} >
@@ -84,9 +102,16 @@ function App() {
           <br/>
 
           <span style={{"fontSize": "16px"}}>
-            <RefIcon href={"https://d3js.org"} src={logoD3} name={"D3.js"} /><sup> &times; </sup>
-            <RefIcon href={"https://reactjs.org/"} src={logoReact} name={"React"} /><sup> + </sup>
-            <RefIcon href={"https://www.rust-lang.org/"} src={logoRust} name={"Rust"} /><sup> &times; </sup>
+            <span style={{"fontSize": "20px"}}><sup>( </sup></span>
+            <RefIcon href={"https://tonejs.github.io/"} src={logoTone} name={"Tone.js"} />
+            <sup> + </sup>
+            <RefIcon href={"https://d3js.org"} src={logoD3} name={"D3.js"} />
+            <span style={{"fontSize": "20px"}}><sup> )</sup></span>
+            <sup> &times; </sup>
+            <RefIcon href={"https://reactjs.org/"} src={logoReact} name={"React"} />
+            <sup> + </sup>
+            <RefIcon href={"https://www.rust-lang.org/"} src={logoRust} name={"Rust"} />
+            <sup> &times; </sup>
             <RefIcon href={"https://aws.amazon.com/lambda/"} src={logoLambda} name={"AWS Lambda"} />
           </span>
           </p>

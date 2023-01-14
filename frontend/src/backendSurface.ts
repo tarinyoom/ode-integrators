@@ -21,6 +21,7 @@ export async function solveAll(problems: IVP[], field: string): Promise<IVPSolut
 			trajectory: response.trajectory,
 			h: ivp.h,
 			n: ivp.n,
+			field: field,
 			method: ivp.method,
 			color: ivp.color
 		};
@@ -28,8 +29,6 @@ export async function solveAll(problems: IVP[], field: string): Promise<IVPSolut
 }
 
 async function integrate(req: IntegratorRequest): Promise<IntegratorResponse> {
-
-	console.log(`sending: ${JSON.stringify(req)}`);
 
 	if (ONLINE) {
 		return fetch(BACKEND_ENDPOINT, {

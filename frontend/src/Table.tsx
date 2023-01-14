@@ -8,24 +8,19 @@ import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
 import { useState } from 'react';
-import { parseH, parseMethod, parseN, parsePoint2D, parseColor, parsePoint } from './utils';
+import { parseH, parseMethod, parseN, parsePoint2D, parseColor } from './utils';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { getUniqueId } from './utils';
+import { getUniqueId, getRandomColor, getRandomDirection, getRandomStartPosition } from './utils';
 import Tooltip from '@mui/material/Tooltip';
-
-const DEFAULT_IVPS: PartialIVP[] = [
-    {id: getUniqueId(), x0: "(2, 0)", v0: "(0, 2)", h: "0.01", n: "7566", method: "RK4", color: "#FF00FF"},
-    {id: getUniqueId(), x0: "(-2, 0)", v0: "(0, -2)", h: "0.01", n: "7566", method: "RK4", color: "#00FFFF"}
-];
 
 function getNewIVP(): PartialIVP {
 	return {
-		id: getUniqueId(), x0: "(3, 0)", v0: "(0, 3)", h: "0.01", n: "10000", method: "Forward Euler", color: "#FFFFFF"
+		id: getUniqueId(), x0: getRandomStartPosition(1, 2), v0: getRandomDirection(10, 170), h: "0.01", n: "10000", method: "RK4", color: getRandomColor()
 	}
 }
 
@@ -34,7 +29,7 @@ function TableView(
 		{register: (f: () => IVP[]) => void}
 	) {
 	
-	const [ivps, setIvps] = useState<PartialIVP[]>(DEFAULT_IVPS);
+	const [ivps, setIvps] = useState<PartialIVP[]>([getNewIVP(), getNewIVP()]);
 
 	function getIVPs(): IVP[] {
 		return validate(ivps);

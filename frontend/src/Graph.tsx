@@ -1,19 +1,18 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { BaseType } from 'd3';
-import { Button, Box } from "@mui/material";
-import Tooltip from '@mui/material/Tooltip';
-import ReplayIcon from '@mui/icons-material/Replay';
+import * as Tone from 'tone';
+import { dot, randomInt, sqrt } from 'mathjs';
 
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
+const LIGHT = [69.30, 82.41, 110, 138.59, 164.81, 220];
+const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220];
 
-const Graph = ({data, field}:
-	{data: IVPSolution[] | undefined, field: string}) => {
+const Graph = ({data, field, synths}:
+	{data: IVPSolution[] | undefined, field: string, synths: Tone.Synth<Tone.SynthOptions>[]}) => {
 
 	const ref = useRef<any>();
-
-	const [refresh, setRefresh] = useState<boolean>();
 
 	let animationStep = data === undefined ? [] : data.map(_ => 0);
 	let rendered = false;
@@ -42,20 +41,18 @@ const Graph = ({data, field}:
 		const dressing = svg.append("g");
 	
 		if (data !== undefined && data.length > 0) {
-			const cover = data.reduce<PointState[]>((acc, curr) => acc.concat(curr.trajectory), []);
 
 			// calculate domains to show all data points nicely
 			const extents = [
-				d3.extent(cover.map(d => d.x[0])), 
-				d3.extent(cover.map(d => d.x[1]))
+				[-3, 3], [-3, 3]
 			] as [number, number][];
 
 			const scale  = extents
 				.map((e: [number, number], i: number) => (e[1] - e[0]) / graphDims[i])
 				.reduce((p: number, c: number) => Math.max(p, c));
-			const ranges  = graphDims.map(dim => dim * scale).map(n => n / 2);
-			const medians = extents.map(e => e[1] + e[0]).map(n => n / 2);
-			const domains = medians.map(
+			const ranges: number[]  = graphDims.map(dim => dim * scale).map(n => n / 2);
+			const medians: number[] = extents.map(e => e[1] + e[0]).map(n => n / 2);
+			const domains: number[][] = medians.map(
 				(median, i) => [-1, 1].map(s => median + s * ranges[i] * DATA_MARGIN)
 				)
 		
@@ -80,7 +77,7 @@ const Graph = ({data, field}:
 					break;
 				case "single_repulsor":
 					
-					background.attr("fill", "#202020");
+					background.attr("fill", "#0F0F0F");
 
 					svg.append("circle")
 						.attr("cx", MARGIN.left + xScale(0))
@@ -128,7 +125,17 @@ const Graph = ({data, field}:
 
 				async function animate() {
 
-					shownPoints.push(transformPoint(result.trajectory[animationStep[i]]));
+					const point = result.trajectory[animationStep[i]];
+					switch (result.field) {
+						case "single_attractor":
+							synths[i].volume.value = - 7 * dot(point.x, point.x);
+							break;
+						case "single_repulsor":
+							synths[i].volume.value = - 7 * (sqrt(dot(point.x, point.x)) as number);
+							break;
+					}
+
+					shownPoints.push(transformPoint(point));
 					path.attr("d", d3.line()(shownPoints));
 
 					if (animationStep[i] >= result.trajectory.length) {
@@ -143,6 +150,17 @@ const Graph = ({data, field}:
 								animate();
 							});
 					}
+				}
+
+				switch (result.field) {
+					case "single_attractor":
+						synths[i].triggerAttack(DARK[randomInt(0, DARK.length)]);
+						break;
+					case "single_repulsor":
+						synths[i].triggerAttack(LIGHT[randomInt(0, LIGHT.length)]);
+						break;
+					default:
+						break;
 				}
 
 				animate();
@@ -163,14 +181,6 @@ const Graph = ({data, field}:
 				width="100%"
 				height="100%"
 			/>
-			<Box sx={{"position": "relative", "top": "-100%", "display":"grid", "justifyItems": "end"}}>
-			<Tooltip title="Replay" placement="left">
-				<Button onClick={() => {
-					setRefresh(!refresh);}}>
-					<ReplayIcon />
-				</Button>
-			</Tooltip>
-			</Box>
 		</>
 	)
   }

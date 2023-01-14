@@ -1,8 +1,26 @@
-const MAX_COLOR_VAL = 16777216;
+import { random, randomInt, cos, sin, unit } from "mathjs";
+
+const SUP_COLOR_VAL = 16777216;
 
 let nextId = 0;
 export function getUniqueId() {
   return (nextId++).toString();
+}
+
+export function getRandomDirection(min: number, max: number) {
+	const degrees = random(min, max);
+	const x = (2 * cos(unit(degrees, 'deg'))).toString().substring(0, 6);
+	const y = (2 * sin(unit(degrees, 'deg'))).toString().substring(0, 6);
+	return `(${x}, ${y})`;
+}
+
+export function getRandomStartPosition(min: number, max: number) {
+	const x = random(min, max).toString().substring(0, 6);
+	return `(${x}, 0)`;
+}
+
+export function getRandomColor() {
+	return `#${randomInt(0, SUP_COLOR_VAL).toString(16).padStart(6, "0")}`
 }
 
 /*
@@ -65,7 +83,7 @@ export function parseColor(s: string) : string | null {
 	if (s.length > 0 && s[0] === "#") {
 		const suffix = s.substring(1);
 		const val = parseInt(suffix, 16);
-		if (!Number.isNaN(val) && val < MAX_COLOR_VAL) { 
+		if (!Number.isNaN(val) && val < SUP_COLOR_VAL) { 
 			return s;
 		} else {
 			return null;

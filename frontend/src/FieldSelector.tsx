@@ -21,7 +21,7 @@ function FieldSelector({register}:
 	  onChange={(e) => setField(e.target.value)}
 	>
 	  <FormControlLabel value="single_attractor" control={<Radio />} label="Single Attractor" />
-	  <FormControlLabel value="single_repulsor" control={<Radio />} label="Single Repulsor (with bouncy chamber)" />
+	  <FormControlLabel value="single_repulsor" control={<Radio />} label="Single Repulsor" />
 	</RadioGroup>
   </FormControl>;
 }
