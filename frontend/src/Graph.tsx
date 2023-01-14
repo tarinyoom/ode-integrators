@@ -8,8 +8,8 @@ import { weakHash } from './utils';
 
 const MARGIN = {top: 5, right: 5, bottom: 20, left: 20};
 const DATA_MARGIN = 1.3; // margin around data points within graph
-const LIGHT = [69.30, 82.41, 110, 138.59, 164.81, 220];
-const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220];
+const LIGHT = [82.41, 110, 138.59, 164.81, 220, 277.18];
+const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220, 293.66];
 const SKIP = 2;
 let active: string[] = [];
 
@@ -125,6 +125,7 @@ const Graph = ({data, field}:
 					return approx;
 				}
 
+				//let shownPoints = result.trajectory.map(transformPoint); 
 				let shownPoints = [transformPoint(result.trajectory[0])];
 
 				const path = svg.append("path")
@@ -153,10 +154,10 @@ const Graph = ({data, field}:
 						const point = result.trajectory[animationStep[i]];
 						switch (result.field) {
 							case "single_attractor":
-								synths[i].volume.value = -2 - 9 / SKIP * dot(point.x, point.x);
+								synths[i].volume.value = (-2 - 9 * dot(point.x, point.x)) / SKIP;
 								break;
 							case "single_repulsor":
-								synths[i].volume.value = -5 - 7 / SKIP * (sqrt(dot(point.x, point.x)) as number);
+								synths[i].volume.value = (-5 - 7 * (sqrt(dot(point.x, point.x)) as number)) / SKIP;
 								break;
 						}
 	
