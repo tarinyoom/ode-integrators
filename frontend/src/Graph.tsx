@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { BaseType } from 'd3';
 import * as Tone from 'tone';
 import { dot, randomInt, sqrt } from 'mathjs';
+import { weakHash } from './utils';
 
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
@@ -167,10 +168,10 @@ const Graph = ({data, field}:
 
 				switch (result.field) {
 					case "single_attractor":
-						synths[i].triggerAttack(DARK[randomInt(0, DARK.length)]);
+						synths[i].triggerAttack(DARK[weakHash(result.color, DARK.length)]);
 						break;
 					case "single_repulsor":
-						synths[i].triggerAttack(LIGHT[randomInt(0, LIGHT.length)]);
+						synths[i].triggerAttack(LIGHT[weakHash(result.color, LIGHT.length)]);
 						break;
 					default:
 						break;

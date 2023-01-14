@@ -12,6 +12,11 @@ export function getUniqueSolnId() {
 	return (nextSolnId++).toString();
 }
 
+export function weakHash(val: string, mod: number) {
+	const hash = Array.from(val).reduce((acc, curr) => (acc + 7 * curr.charCodeAt(0)) % 11, 23);
+	return hash % mod;
+}
+
 export function getRandomDirection(min: number, max: number) {
 	const degrees = random(min, max);
 	const x = (2 * cos(unit(degrees, 'deg'))).toString().substring(0, 6);
