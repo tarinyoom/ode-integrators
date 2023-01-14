@@ -56,11 +56,11 @@ function App() {
     <div className="App">
 
       <Box display="flex" justifyContent="center" height={"10vh"}>
-        <h3>Parallel Integration</h3>
+        <h3>Parallel Sonic Integration</h3>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"10vh"}>
-        <p>Numerical integration with sound. Set your IVPs and integrate!</p>
+      <Box display="flex" justifyContent="center" height={"15vh"}>
+        <p>Numerical integration with sound. Add some IVPs and hear what they sound like.</p>
       </Box>
 
       <Table register={registerGetInitialConditions} />
