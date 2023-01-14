@@ -138,29 +138,27 @@ const Graph = ({data, field}:
 
 				async function animate() {
 
-					if (!active.includes(result.id)) {
+					if (!active.includes(result.id) || animationStep[i] >= result.trajectory.length) {
 						synths[i].triggerRelease();
 						synths[i].disconnect();
 						synths[i].dispose();
+						pt.remove();
 						return;
-					}
 
-					const point = result.trajectory[animationStep[i]];
-					switch (result.field) {
-						case "single_attractor":
-							synths[i].volume.value = -2 - 9 * dot(point.x, point.x);
-							break;
-						case "single_repulsor":
-							synths[i].volume.value = -5 - 7 * (sqrt(dot(point.x, point.x)) as number);
-							break;
-					}
-
-					shownPoints.push(transformPoint(point));
-					path.attr("d", d3.line()(shownPoints));
-
-					if (animationStep[i] >= result.trajectory.length) {
-						return;
 					} else {
+
+						const point = result.trajectory[animationStep[i]];
+						switch (result.field) {
+							case "single_attractor":
+								synths[i].volume.value = -2 - 9 * dot(point.x, point.x);
+								break;
+							case "single_repulsor":
+								synths[i].volume.value = -5 - 7 * (sqrt(dot(point.x, point.x)) as number);
+								break;
+						}
+	
+						shownPoints.push(transformPoint(point));
+						path.attr("d", d3.line()(shownPoints));
 						pt.transition()
 							.duration(1000 * result.h)
 							.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
