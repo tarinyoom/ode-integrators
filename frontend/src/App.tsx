@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Button } from "@mui/material";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 import Graph from './Graph';
 import { Box } from '@mui/material';
@@ -24,6 +24,7 @@ function App() {
     }
   });
 
+  const footer = useRef<any>();
   const [data, setData] = useState<IVPSolution[]>();
   const [field, setField] = useState<string>("none");
 
@@ -43,6 +44,7 @@ function App() {
 
   function integrate() {
     setData([]);
+    footer.current.scrollIntoView({ behavior: "smooth" });
     solveAll(getInitialConditions(), getField()).then((data) => {
       setLoading(false);
       setData(data);
@@ -91,7 +93,7 @@ function App() {
         </Box>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"8vh"}>
+      <Box display="flex" ref={footer} justifyContent="center" height={"8vh"}>
         <p style={{"fontSize": "12px"}}>
           By Adam Reynolds <a href="https://github.com/tarinyoom/ode-integrators">(source)</a>
           <br/>
