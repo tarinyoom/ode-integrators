@@ -42,6 +42,7 @@ function App() {
   }
 
   function integrate() {
+    setData([]);
     solveAll(getInitialConditions(), getField()).then((data) => {
       setLoading(false);
       setData(data);
