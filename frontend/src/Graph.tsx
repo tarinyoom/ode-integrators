@@ -10,6 +10,7 @@ const MARGIN = {top: 5, right: 5, bottom: 20, left: 20};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 const LIGHT = [69.30, 82.41, 110, 138.59, 164.81, 220];
 const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220];
+const SKIP = 2;
 let active: string[] = [];
 
 const Graph = ({data, field}:
@@ -119,7 +120,9 @@ const Graph = ({data, field}:
 			data.forEach((result: IVPSolution, i: number) => {
 
 				function transformPoint(point: PointState): [number, number] {
-					return [MARGIN.left + xScale(point.x[0]), MARGIN.top + yScale(point.x[1])];
+					const exact = [MARGIN.left + xScale(point.x[0]), MARGIN.top + yScale(point.x[1])];
+					const approx: [number, number] = [Math.round(exact[0] * 100) / 100, Math.round(exact[1] * 100) / 100]
+					return approx;
 				}
 
 				let shownPoints = [transformPoint(result.trajectory[0])];
@@ -150,10 +153,10 @@ const Graph = ({data, field}:
 						const point = result.trajectory[animationStep[i]];
 						switch (result.field) {
 							case "single_attractor":
-								synths[i].volume.value = -2 - 9 * dot(point.x, point.x);
+								synths[i].volume.value = -2 - 9 / SKIP * dot(point.x, point.x);
 								break;
 							case "single_repulsor":
-								synths[i].volume.value = -5 - 7 * (sqrt(dot(point.x, point.x)) as number);
+								synths[i].volume.value = -5 - 7 / SKIP * (sqrt(dot(point.x, point.x)) as number);
 								break;
 						}
 	
@@ -164,7 +167,7 @@ const Graph = ({data, field}:
 							.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
 							.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
 							.on("end", () => {
-								animationStep[i]++;
+								animationStep[i] += SKIP;
 								animate();
 							});
 					}
