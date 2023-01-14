@@ -2,7 +2,8 @@ import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { BaseType } from 'd3';
 import * as Tone from 'tone';
-import { dot, randomInt, sqrt } from 'mathjs';
+import { dot, sqrt } from 'mathjs';
+import { getUniqueSolnId } from "./utils";
 import { weakHash } from './utils';
 
 const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
@@ -18,6 +19,11 @@ const Graph = ({data, field}:
 	synths.forEach((synth) => {
 		synth.volume.value = Number.MIN_SAFE_INTEGER;
 	})
+
+	data?.forEach((soln) => {
+		soln.id = getUniqueSolnId();
+	})
+	
 	active = data === undefined ? [] : data.map((value) => value.id);
 	const ref = useRef<any>();
 
