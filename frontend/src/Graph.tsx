@@ -6,7 +6,7 @@ import { dot, sqrt } from 'mathjs';
 import { getUniqueSolnId } from "./utils";
 import { weakHash } from './utils';
 
-const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
+const MARGIN = {top: 5, right: 5, bottom: 20, left: 20};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 const LIGHT = [69.30, 82.41, 110, 138.59, 164.81, 220];
 const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220];
