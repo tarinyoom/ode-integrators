@@ -16,7 +16,6 @@ import logoRust from './img/rust.png';
 import logoLambda from './img/lambda.png';
 import FieldSelector from './FieldSelector';
 import * as Tone from 'tone';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function App() {
   const darkTheme = createTheme({
@@ -30,8 +29,6 @@ function App() {
 
   let getInitialConditions: () => IVP[];
   let getField: () => string;
-
-  let synths: Tone.Synth<Tone.SynthOptions>[] = data === undefined? [] : data.map(_ => new Tone.Synth().toDestination());
 
   const [loading, setLoading] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(false);
@@ -73,9 +70,6 @@ function App() {
           <Button variant="contained" onClick={async () => {
             setLoading(true);
             setInit(true);
-            synths.forEach((synth) => {
-              synth.triggerRelease();
-            })
             if (!init) {
               await Tone.start().then(() => {
                 integrate();
@@ -88,7 +82,7 @@ function App() {
 
       <Box hidden={!init} margin="auto" display="flex" height={"90vh"} width={"90vw"}>
         <Box hidden={loading} width={"100%"} height={"100%"}>
-          <Graph data={data} field={field} synths={synths}/>
+          <Graph data={data} field={field} />
         </Box>
         
         <Box hidden={!loading} padding={"35vh"} width={"100%"} height={"100%"} >

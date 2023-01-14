@@ -1,4 +1,5 @@
 import testData from "./testData.json";
+import { getUniqueSolnId } from "./utils";
 
 const BACKEND_ENDPOINT = "https://yhztmrh2ot3j5bsnzmo42zq2ja0apemx.lambda-url.us-west-1.on.aws/";
 const ONLINE = true;
@@ -17,7 +18,7 @@ export async function solveAll(problems: IVP[], field: string): Promise<IVPSolut
 		});
 
 		return {
-			id: ivp.id,
+			id: getUniqueSolnId(),
 			trajectory: response.trajectory,
 			h: ivp.h,
 			n: ivp.n,

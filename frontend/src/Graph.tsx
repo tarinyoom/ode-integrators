@@ -8,10 +8,16 @@ const MARGIN = {top: 20, right: 20, bottom: 30, left: 50};
 const DATA_MARGIN = 1.3; // margin around data points within graph
 const LIGHT = [69.30, 82.41, 110, 138.59, 164.81, 220];
 const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220];
+let active: string[] = [];
 
-const Graph = ({data, field, synths}:
-	{data: IVPSolution[] | undefined, field: string, synths: Tone.Synth<Tone.SynthOptions>[]}) => {
+const Graph = ({data, field}:
+	{data: IVPSolution[] | undefined, field: string}) => {
 
+	const synths: Tone.Synth<Tone.SynthOptions>[] = data === undefined? [] : data.map(_ => new Tone.Synth().toDestination());
+	synths.forEach((synth) => {
+		synth.volume.value = Number.MIN_SAFE_INTEGER;
+	})
+	active = data === undefined ? [] : data.map((value) => value.id);
 	const ref = useRef<any>();
 
 	let animationStep = data === undefined ? [] : data.map(_ => 0);
@@ -125,13 +131,20 @@ const Graph = ({data, field, synths}:
 
 				async function animate() {
 
+					if (!active.includes(result.id)) {
+						synths[i].triggerRelease();
+						synths[i].disconnect();
+						synths[i].dispose();
+						return;
+					}
+
 					const point = result.trajectory[animationStep[i]];
 					switch (result.field) {
 						case "single_attractor":
-							synths[i].volume.value = - 7 * dot(point.x, point.x);
+							synths[i].volume.value = -2 - 9 * dot(point.x, point.x);
 							break;
 						case "single_repulsor":
-							synths[i].volume.value = - 7 * (sqrt(dot(point.x, point.x)) as number);
+							synths[i].volume.value = -5 - 7 * (sqrt(dot(point.x, point.x)) as number);
 							break;
 					}
 

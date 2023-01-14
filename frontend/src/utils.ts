@@ -7,6 +7,11 @@ export function getUniqueId() {
   return (nextId++).toString();
 }
 
+let nextSolnId = 0;
+export function getUniqueSolnId() {
+	return (nextSolnId++).toString();
+}
+
 export function getRandomDirection(min: number, max: number) {
 	const degrees = random(min, max);
 	const x = (2 * cos(unit(degrees, 'deg'))).toString().substring(0, 6);
