@@ -14,6 +14,7 @@ import logoD3 from './img/d3.png';
 import logoReact from './img/react.png';
 import logoRust from './img/rust.png';
 import logoLambda from './img/lambda.png';
+import logoTypescript from './img/typeScript.png';
 import FieldSelector from './FieldSelector';
 import * as Tone from 'tone';
 
@@ -101,10 +102,12 @@ function App() {
           <br/>
 
           <span style={{"fontSize": "16px"}}>
+            <RefIcon href={"https://www.typescriptlang.org/"} src={logoTypescript} name={"typeScript"} />
+            <sup> &times; </sup>
             <span style={{"fontSize": "20px"}}><sup>( </sup></span>
-            <RefIcon href={"https://tonejs.github.io/"} src={logoTone} name={"Tone.js"} />
-            <sup> + </sup>
             <RefIcon href={"https://d3js.org"} src={logoD3} name={"D3.js"} />
+            <sup> + </sup>
+            <RefIcon href={"https://tonejs.github.io/"} src={logoTone} name={"Tone.js"} />
             <span style={{"fontSize": "20px"}}><sup> )</sup></span>
             <sup> &times; </sup>
             <RefIcon href={"https://reactjs.org/"} src={logoReact} name={"React"} />

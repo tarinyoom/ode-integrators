@@ -7,9 +7,9 @@ import { getUniqueSolnId } from "./utils";
 import { weakHash } from './utils';
 
 const MARGIN = {top: 5, right: 5, bottom: 20, left: 20};
-const DATA_MARGIN = 1.3; // margin around data points within graph
-const LIGHT = [82.41, 110, 138.59, 164.81, 220, 277.18];
-const DARK = [73.42, 87.31, 110, 146.83, 174.61, 220, 293.66];
+const DATA_MARGIN = 1; 
+const LIGHT = [82.41, 110, 138.59, 164.81, 220];
+const DARK = [55, 73.42, 87.31, 110, 146.83, 174.61];
 const SKIP = 2;
 let active: string[] = [];
 
