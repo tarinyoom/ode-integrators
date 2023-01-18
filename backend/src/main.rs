@@ -1,24 +1,22 @@
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
-use nalgebra::{Vector2};
+use nalgebra::{Vector2, Vector4};
 
 use serde::{Deserialize, Serialize};
 
-type Vector = Vector2<f64>;
 type Scalar = f64;
-type Force  = Vector;
-type Position = Vector;
+type State = Vector4<f64>;
 
 #[derive(Deserialize, Serialize)]
 struct Point {
-    x: Vector,
-    v: Vector
+    x: Vector2<f64>,
+    v: Vector2<f64>
 }
 
 #[derive(Deserialize)]
 struct IVPRequest {
-    x0: Vector,
-    v0: Vector,
+    x0: Vector2<f64>,
+    v0: Vector2<f64>,
     n: i32,
     h: Scalar,
     field: String,
@@ -53,29 +51,31 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
     
     let field = {
         if req.field == "single_repulsor" {
-            force_origin_repulsor
+            f_origin_repulsor
         } else {
-            force_origin_attractor
+            f_origin_attractor
         }
     };
     
-    let mut trajectory: Vec<Point> = Vec::new();
-    trajectory.push(Point{x: req.x0, v: req.v0});
+    let mut trajectory: Vec<State> = Vec::new();
+    trajectory.push(State::new(req.x0[0], req.x0[1], req.v0[0], req.v0[1]));
     
     for _ in 0..req.n {
-        let p = trajectory.last().expect("This should be impossible");
-        trajectory.push(step(&p, field, req.h));
+        let s = trajectory.last().expect("This should be impossible");
+        trajectory.push(step(*s, field, req.h));
     }
     
-    trajectory
+    trajectory.into_iter().map(|s| Point {x: Vector2::new(s[0], s[1]), v: Vector2::new(s[2], s[3])}).collect()
 }
 
-fn force_origin_attractor(x: Vector) -> Vector {
+fn f_origin_attractor(x: State) -> State {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
-    -x * 6.6743 / d2
+    let force = -x * 6.6743 / d2;
+    
+    State::new(x[2], x[3], force[0], force[1])
 }
 
-fn force_origin_repulsor(x: Vector) -> Vector {
+fn f_origin_repulsor(x: State) -> State {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
     let penalty = {
         if d2 > 9. {
@@ -85,32 +85,20 @@ fn force_origin_repulsor(x: Vector) -> Vector {
         }
     };
     
-    x * (6.6743 / d2 + penalty)
+    let force = x * (6.6743 / d2 + penalty);
+    
+    State::new(x[2], x[3], force[0], force[1])
 }
 
-fn step_fe(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
-    Point {
-        x: y.x + h * y.v,
-        v: y.v + h * f(y.x)
-    }
+fn step_fe(y: &State, f: fn(State) -> State, h: Scalar) -> State {
+    y + h * f(y)
 }
 
-fn step_rk4(y: &Point, f: fn(Position) -> Force, h: Scalar) -> Point {
-    // k1 through k4 for dx, l1 through l4 for dv
-    let k1 = y.v;
-    let l1 = f(y.x);
+fn step_rk4(y: &State, f: fn(State) -> State, h: Scalar) -> State {
+    let k1 = f(y);
+    let k2 = f(y + h * k1 / 2.);
+    let k3 = f(y + h * k2 / 2.);
+    let k4 = f(y + h * k3);
     
-    let k2 = y.v + h * l1 / 2.;
-    let l2 = f(y.x + h * k1 / 2.);
-    
-    let k3 = y.v + h * l2 / 2.;
-    let l3 = f(y.x + h * k2 / 2.);
-    
-    let k4 = y.v + h * l3;
-    let l4 = f(y.x + h * k3);
-    
-    Point {
-        x: y.x + h * (k1 + 2. * k2 + 2. * k3 + k4) / 6.,
-        v: y.v + h * (l1 + 2. * l2 + 2. * l3 + l4) / 6.
-    }
+    y + h * (k1 + 2. * k2 + 2. * k3 + k4) / 6.
 }
