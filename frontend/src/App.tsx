@@ -58,11 +58,13 @@ function App() {
     <div className="App">
 
       <Box display="flex" justifyContent="center" height={"10vh"}>
-        <h3>Parallel Sonic Integration</h3>
+        <h3>ODE Visualization and Sonification</h3>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"15vh"}>
-        <p>Numerical integration with sound. Add some IVPs and hear what they sound like.</p>
+      <Box display="flex" justifyContent="center" height={"15vh"} paddingLeft={"10vw"} paddingRight={"10vw"}>
+        <p>Solve 2nd-order ordinary differential equations (ODEs) based on initial conditions of your choice.
+          Provide some initial conditions and integration specifications in the table below, or just use randomly generated ones.
+          Then use the "integrate" button to see and hear the resulting solutions.</p>
       </Box>
 
       <Table register={registerGetInitialConditions} />
