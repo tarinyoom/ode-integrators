@@ -7,6 +7,8 @@ import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
+import { SketchPicker } from 'react-color';
+import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import { parseH, parseMethod, parseN, parsePoint2D, parseColor } from './utils';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -36,6 +38,8 @@ function TableView(
 	) {
 	
 	const [ivps, setIvps] = useState<PartialIVP[]>([getNewIVP()]);
+	const [colorAnchor, setColorAnchor] = useState<HTMLButtonElement | null>(null);
+	const [colorOpen, setColorOpen] = useState<string | null>(null);
 
 	function getIVPs(): IVP[] {
 		return validate(ivps);
@@ -106,7 +110,7 @@ function TableView(
 		  </TableHead>
 
 		  <TableBody>
-			{ivps.map((ivp) => (
+			{ivps.map((ivp, i) => (
 			  <TableRow
 				key={ivp.id}
 				sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -172,12 +176,33 @@ function TableView(
 				</TableCell>
 
 				<TableCell align="center">
-				<Input 
-						value={ivp.color}
-						error={parseColor(ivp.color) === null}
-						onChange={(e) => {
-							modifyIvp(ivp.id, ivp => {ivp.color = e.target.value});
-					}}/>
+					<Button
+						variant="contained"
+						style={{backgroundColor: ivp.color}}
+						onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+							setColorAnchor(event.currentTarget);
+							setColorOpen(ivp.id);
+					}}>
+						 &nbsp;
+					</Button>
+					<Popover
+						open={colorOpen === ivp.id}
+						anchorEl={colorAnchor}
+						onClose={() => {
+							setColorAnchor(null);
+							setColorOpen(null);
+						}}
+						anchorOrigin={{
+						vertical: 'bottom',
+						horizontal: 'left',
+						}}
+					>
+					<SketchPicker
+						color={ivp.color}
+						onChangeComplete={(color) => {
+							modifyIvp(ivp.id, (ivp) => {ivp.color = color.hex});
+						}}/>
+					</Popover>
 				</TableCell>
 			  </TableRow>
 			))}

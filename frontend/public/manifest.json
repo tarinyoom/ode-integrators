@@ -1,6 +1,6 @@
 {
   "short_name": "ODE Playground",
-  "name": "Numerical integration of first order ODEs in R2",
+  "name": "Numerical integration of second order ODEs in R2",
   "icons": [
     {
       "src": "favicon.ico",
