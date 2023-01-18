@@ -1,7 +1,6 @@
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use serde_json::{json, Value};
-use nalgebra::{Vector2, Vector4};
-
+use nalgebra::{Vector2, Vector4, Matrix4};
 use serde::{Deserialize, Serialize};
 
 type Scalar = f64;
@@ -23,6 +22,8 @@ struct IVPRequest {
     method: String
 }
 
+const K: f64 = 6.6743;
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let func = service_fn(func);
@@ -42,10 +43,12 @@ async fn func(event: LambdaEvent<Value>) -> Result<Value, Error> {
 fn integrate(req: IVPRequest) -> Vec<Point> {
 
     let step = {
-        if req.method == "RK4" {
-            step_rk4
-        } else {
+        if req.method == "Forward Euler" {
             step_fe
+        } else if req.method == "Backward Euler" {
+            step_be
+        } else {
+            step_rk4
         }
     };
     
@@ -70,7 +73,7 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
 
 fn f_origin_attractor(x: State) -> State {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
-    let force = -x * 6.6743 / d2;
+    let force = -x * K / d2;
     
     State::new(x[2], x[3], force[0], force[1])
 }
@@ -85,16 +88,48 @@ fn f_origin_repulsor(x: State) -> State {
         }
     };
     
-    let force = x * (6.6743 / d2 + penalty);
+    let force = x * (K / d2 + penalty);
     
     State::new(x[2], x[3], force[0], force[1])
 }
 
-fn step_fe(y: &State, f: fn(State) -> State, h: Scalar) -> State {
+fn j_origin_attractor(x: State, h: f64) -> Matrix4<f64> {
+
+    // ad hoc computation steps
+    let denom = (x[0].powf(2.) + x[1].powf(2.)).powf(2.);
+    let diff = h * K * (x[0].powf(2.) - x[1].powf(2.)) / denom;
+    let prod = h * K * 2. * x[0] * x[1] / denom;
+    
+    let j = Matrix4::new(
+         -1.,    0.,  h,  0., 
+          0.,   -1.,  0.,  h,
+        diff,  prod, -1.,  0.,
+        prod, -diff,  0., -1.
+        );
+        
+    j
+}
+
+fn step_fe(y: State, f: fn(State) -> State, h: Scalar) -> State {
     y + h * f(y)
 }
 
-fn step_rk4(y: &State, f: fn(State) -> State, h: Scalar) -> State {
+fn step_be(y: State, f: fn(State) -> State, h: Scalar) -> State {
+    let mut approx = step_fe(y, f, h);
+
+    for _ in 0..1000 {
+    
+        let diff = j_origin_attractor(approx, h).lu().solve(&(y + h * f(approx) - approx));
+        match diff {
+            Some(value) => { approx -= value;}
+            None        => { return y; }
+        }
+    }
+    
+    approx
+}
+
+fn step_rk4(y: State, f: fn(State) -> State, h: Scalar) -> State {
     let k1 = f(y);
     let k2 = f(y + h * k1 / 2.);
     let k3 = f(y + h * k2 / 2.);
