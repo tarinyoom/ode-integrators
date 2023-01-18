@@ -85,7 +85,7 @@ export function parseN(s: string) : number | null {
 }
 
 export function parseMethod(s: string | null) : Method | "" {
-	if (s === "Forward Euler" || s === "RK4") {
+	if (s === "Forward Euler" || s === "Backward Euler" || s === "RK4") {
 		return s;
 	} else {
 		return "";

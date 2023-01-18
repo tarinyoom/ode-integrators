@@ -3,7 +3,7 @@ type PointState = {
 	x: Point,
 	v: Point
 }
-type Method = "Forward Euler" | "RK4";
+type Method = "Forward Euler" | "Backward Euler" | "RK4";
 
 type IVP = {
 	id: string,
