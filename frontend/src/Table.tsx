@@ -92,6 +92,8 @@ function TableView(
 	}
 
 	register(getIVPs);
+
+	const methodTooltip = "Forward Euler and RK4 use standard approaches exactly. Backward Euler uses Newton method to converge, with each step converging for 1000 iterations.";
   
 	return (
 		<TableContainer component={Paper}>
@@ -104,7 +106,9 @@ function TableView(
 			  <TableCell align="center"><Tooltip title="Initial Velocity" placement="top"><p>v<sub>0</sub></p></Tooltip></TableCell>
 			  <TableCell align="center"><Tooltip title="Time Step" placement="top"><p>&#916;t</p></Tooltip></TableCell>
 			  <TableCell align="center"><Tooltip title="Number of Iterations" placement="top"><p>n<sub>iters</sub></p></Tooltip></TableCell>
-			  <TableCell align="center"><Tooltip title="Integration Method" placement="top"><p>Method</p></Tooltip></TableCell>
+			  <TableCell align="center">
+				<Tooltip title={"Integration Method. " + methodTooltip} placement="top"><p>Method </p></Tooltip>
+			  </TableCell>
 			  <TableCell align="center"><Tooltip title="Trace Color" placement="top"><p>Color</p></Tooltip></TableCell>
 			</TableRow>
 		  </TableHead>
