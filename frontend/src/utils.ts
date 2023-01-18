@@ -1,5 +1,7 @@
 import { random, randomInt, cos, sin, unit } from "mathjs";
 
+const SUP_COMPONENT_VAL = 256;
+const INF_COMPONENT_VAL = 32;
 const SUP_COLOR_VAL = 16777216;
 
 let nextId = 0;
@@ -30,7 +32,8 @@ export function getRandomStartPosition(min: number, max: number) {
 }
 
 export function getRandomColor() {
-	return `#${randomInt(0, SUP_COLOR_VAL).toString(16).padStart(6, "0")}`
+	const components = ["","",""].map((_) => randomInt(INF_COMPONENT_VAL, SUP_COMPONENT_VAL).toString(16).padStart(2, "0"));
+	return `#${components.join('')}`;
 }
 
 /*

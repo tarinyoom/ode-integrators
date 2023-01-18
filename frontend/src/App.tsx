@@ -62,7 +62,7 @@ function App() {
         <h3>ODE Visualization and Sonification</h3>
       </Box>
 
-      <Box display="flex" justifyContent="center" height={"15vh"} paddingLeft={"10vw"} paddingRight={"10vw"}>
+      <Box display="flex" justifyContent="center" paddingBottom={"5vh"} paddingLeft={"10vw"} paddingRight={"10vw"}>
         <p>Solve 2nd-order ordinary differential equations (ODEs) based on initial conditions of your choice.
           Provide some initial conditions and integration specifications in the table below, or just use randomly generated ones.
           Then use the "integrate" button to see and hear the resulting solutions.</p>
@@ -70,7 +70,9 @@ function App() {
 
       <Table register={registerGetInitialConditions} />
 
-      <FieldSelector register={registerGetField}/>
+      <Box marginTop={"5vh"} marginBottom={"3vh"}>
+        <FieldSelector register={registerGetField}/>
+      </Box>
 
       <Box margin={"15px"}>
           <Button variant="contained" onClick={async () => {
@@ -91,7 +93,7 @@ function App() {
           <Graph data={data} field={field} />
         </Box>
         
-        <Box hidden={!loading} padding={"35vh"} width={"100%"} height={"100%"} >
+        <Box hidden={!loading} paddingTop={"35vh"} width={"100%"} height={"100%"} >
           <CircularProgress size={"20vh"}/>
         </Box>
       </Box>

@@ -6,9 +6,9 @@ import { dot, sqrt } from 'mathjs';
 import { getUniqueSolnId } from "./utils";
 import { weakHash } from './utils';
 
-const MARGIN = {top: 5, right: 5, bottom: 20, left: 20};
+const MARGIN = {top: 5, right: 5, bottom: 20, left: 25};
 const DATA_MARGIN = 1; 
-const LIGHT = [82.41, 110, 138.59, 164.81, 220];
+const LIGHT = [55, 69.3, 82.41, 110, 138.59, 164.81];
 const DARK = [55, 73.42, 87.31, 110, 146.83, 174.61];
 const SKIP = 2;
 let active: string[] = [];
