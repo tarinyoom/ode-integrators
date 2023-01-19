@@ -8,6 +8,7 @@ import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import { Input, Button } from "@mui/material";
 import { SketchPicker } from 'react-color';
+import InfoIcon from '@mui/icons-material/Info';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import { parseH, parseMethod, parseN, parsePoint2D, parseColor } from './utils';
@@ -93,7 +94,24 @@ function TableView(
 
 	register(getIVPs);
 
-	const methodTooltip = "Forward Euler and RK4 use standard approaches exactly. Backward Euler uses Newton method to converge, with each step converging for 1000 iterations.";
+	const hTooltip = "\
+	How often the trajectory is recalculated.\
+	As this value gets smaller, the results will increase in accuracy.\
+	";
+
+	const nTooltip = "\
+	How many iterations the simulation should run for.\
+	The total simulated time will be the time step times the number of steps.\
+	";
+
+	const methodTooltip = "\
+	The integration method to be used.\
+	For the two fields provided here, RK4 yields the most stable solutions.\
+	Forward Euler causing particles to gain energy over time,\
+	while Backward Euler causes particles to lose energy over time.\
+	Backward Euler uses Newton's method to converge, with each step converging for 1000 iterations,\
+	so it will take longer to calculate than the other methods.\
+	";
   
 	return (
 		<TableContainer component={Paper}>
@@ -102,14 +120,21 @@ function TableView(
 		  <TableHead>
 			<TableRow>
 			  <TableCell align="center"></TableCell>
-			  <TableCell align="center"><Tooltip title="Initial Position" placement="top"><p>x<sub>0</sub></p></Tooltip></TableCell>
-			  <TableCell align="center"><Tooltip title="Initial Velocity" placement="top"><p>v<sub>0</sub></p></Tooltip></TableCell>
-			  <TableCell align="center"><Tooltip title="Time Step" placement="top"><p>&#916;t</p></Tooltip></TableCell>
-			  <TableCell align="center"><Tooltip title="Number of Iterations" placement="top"><p>n<sub>iters</sub></p></Tooltip></TableCell>
+			  <TableCell align="center">Initial Position</TableCell>
+			  <TableCell align="center">Initial Velocity</TableCell>
 			  <TableCell align="center">
-				<Tooltip title={"Integration Method. " + methodTooltip} placement="top"><p>Method </p></Tooltip>
+				Time Step&nbsp;
+				<Tooltip title={hTooltip} placement="top"><InfoIcon fontSize="small" /></Tooltip>
+				</TableCell>
+			  <TableCell align="center">
+				Number of Iterations&nbsp;
+				<Tooltip title={nTooltip} placement="top"><InfoIcon /></Tooltip>
+				</TableCell>
+			  <TableCell align="center">
+				Integration Method&nbsp;
+				<Tooltip title={methodTooltip} placement="top"><InfoIcon /></Tooltip>
 			  </TableCell>
-			  <TableCell align="center"><Tooltip title="Trace Color" placement="top"><p>Color</p></Tooltip></TableCell>
+			  <TableCell align="center">Color</TableCell>
 			</TableRow>
 		  </TableHead>
 
