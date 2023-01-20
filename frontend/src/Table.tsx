@@ -94,24 +94,9 @@ function TableView(
 
 	register(getIVPs);
 
-	const hTooltip = "\
-	How often the trajectory is recalculated.\
-	As this value gets smaller, the results will increase in accuracy.\
-	";
-
-	const nTooltip = "\
-	How many iterations the simulation should run for.\
-	The total simulated time will be the time step times the number of steps.\
-	";
-
-	const methodTooltip = "\
-	The integration method to be used.\
-	For the two fields provided here, RK4 yields the most stable solutions.\
-	Forward Euler causing particles to gain energy over time,\
-	while Backward Euler causes particles to lose energy over time.\
-	Backward Euler uses Newton's method to converge, with each step converging for 1000 iterations,\
-	so it will take longer to calculate than the other methods.\
-	";
+	const hTooltip = "How often the trajectory is recalculated. As this value gets smaller, the results will increase in accuracy.";
+	const nTooltip = "How many iterations the simulation should run for. The total simulated time will be the time step times the number of steps.";
+	const methodTooltip = "The integration method to be used. For the two fields provided here, RK4 yields the most stable solutions. Forward Euler causing particles to gain energy over time, while Backward Euler causes particles to lose energy over time. Backward Euler uses Newton's method to converge, with each step converging for 1000 iterations, so it will take longer to calculate than the other methods.";
   
 	return (
 		<TableContainer component={Paper}>

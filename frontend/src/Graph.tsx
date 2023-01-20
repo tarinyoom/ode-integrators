@@ -86,7 +86,7 @@ const Graph = ({data, field}:
 					dressing.append("circle")
 					.attr("cx", MARGIN.left + xScale(0))
 					.attr("cy", MARGIN.top + yScale(0))
-					.attr("r", "3px")
+					.attr("r", "5px")
 					.attr("fill", "#FFFFFF");
 					break;
 				case "single_repulsor":
@@ -102,7 +102,7 @@ const Graph = ({data, field}:
 					svg.append("circle")
 						.attr("cx", MARGIN.left + xScale(0))
 						.attr("cy", MARGIN.top + yScale(0))
-						.attr("r", "3px")
+						.attr("r", "5px")
 						.attr("fill", "#FF0000");
 					break;
 				default:
@@ -131,13 +131,13 @@ const Graph = ({data, field}:
 				const path = svg.append("path")
 				.attr("fill", "none")
 				.attr("stroke", result.color)
-				.attr("stroke-width", "0.4px")
+				.attr("stroke-width", "1px")
 				.attr("d", d3.line()(shownPoints));
 
 				const pt = svg.append("circle")
 					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
 					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
-					.attr("r", "2px")
+					.attr("r", "3px")
 					.attr("fill", result.color)
 
 				async function animate() {
