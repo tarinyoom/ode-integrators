@@ -131,13 +131,13 @@ const Graph = ({data, field}:
 				const path = svg.append("path")
 				.attr("fill", "none")
 				.attr("stroke", result.color)
-				.attr("stroke-width", "1px")
+				.attr("stroke-width", "0.5px")
 				.attr("d", d3.line()(shownPoints));
 
 				const pt = svg.append("circle")
 					.attr("cx", MARGIN.left + xScale(result.trajectory[animationStep[i]].x[0]))
 					.attr("cy", MARGIN.top + yScale(result.trajectory[animationStep[i]].x[1]))
-					.attr("r", "3px")
+					.attr("r", "1.5px")
 					.attr("fill", result.color)
 
 				async function animate() {
