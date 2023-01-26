@@ -65,6 +65,7 @@ function App() {
       <Box display="flex" justifyContent="center" paddingBottom={"5vh"} paddingLeft={"10vw"} paddingRight={"10vw"}>
         <p>Solve 2nd-order ordinary differential equations (ODEs) based on initial conditions of your choice.
           Provide some initial conditions and integration specifications in the table below, or just use randomly generated ones.
+          You can use the "+" button to add a new IVP-- all IVPs will be solved in parallel.
           Then use the "integrate" button to see and hear the resulting solutions.</p>
       </Box>
 
