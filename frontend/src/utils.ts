@@ -14,8 +14,10 @@ export function getUniqueSolnId() {
 	return (nextSolnId++).toString();
 }
 
-export function weakHash(val: string, mod: number) {
-	const hash = Array.from(val).reduce((acc, curr) => (acc + 7 * curr.charCodeAt(0)) % 11, 23);
+export function weakHash(val: string, i: number, mod: number) {
+	// const hash = Array.from(val).reduce((acc, curr) => (acc + 7 * curr.charCodeAt(0)) % 11, 23);
+	const hash = i;
+	
 	return hash % mod;
 }
 

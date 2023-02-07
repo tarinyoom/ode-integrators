@@ -8,10 +8,12 @@ import { weakHash } from './utils';
 
 const MARGIN = {top: 5, right: 5, bottom: 20, left: 25};
 const DATA_MARGIN = 1; 
-const LIGHT = [55, 69.3, 82.41, 110, 138.59, 164.81];
-const DARK = [55, 73.42, 87.31, 110, 146.83, 174.61];
+const LIGHT = [82.41, 110, 138.59, 164.81, 220, 277.18];
+const DARK = [87.31, 110, 146.83, 174.61, 220, 293.66];
+const REFERENCE_FREQ = 110;
 const SKIP = 2;
 let active: string[] = [];
+let relativeFreqs: number[] = [];
 
 const Graph = ({data, field}:
 	{data: IVPSolution[] | undefined, field: string}) => {
@@ -26,6 +28,7 @@ const Graph = ({data, field}:
 	})
 	
 	active = data === undefined ? [] : data.map((value) => value.id);
+	relativeFreqs = data === undefined ? [] : data.map(_ => REFERENCE_FREQ);
 	const ref = useRef<any>();
 
 	let animationStep = data === undefined ? [] : data.map(_ => 0);
@@ -154,10 +157,11 @@ const Graph = ({data, field}:
 						const point = result.trajectory[animationStep[i]];
 						switch (result.field) {
 							case "single_attractor":
-								synths[i].volume.value = (-2 - 9 * dot(point.x, point.x)) / SKIP;
+								console.log(`relative freqs is ${relativeFreqs[i]}`)
+								synths[i].volume.value = (-2 - 9 * dot(point.x, point.x)) / SKIP * relativeFreqs[i];
 								break;
 							case "single_repulsor":
-								synths[i].volume.value = (-5 - 7 * (sqrt(dot(point.x, point.x)) as number)) / SKIP;
+								synths[i].volume.value = (-5 - 7 * (sqrt(dot(point.x, point.x)) as number)) / SKIP * relativeFreqs[i];
 								break;
 						}
 	
@@ -176,10 +180,12 @@ const Graph = ({data, field}:
 
 				switch (result.field) {
 					case "single_attractor":
-						synths[i].triggerAttack(DARK[weakHash(result.color, DARK.length)]);
+						relativeFreqs[i] = DARK[weakHash(result.color, i, DARK.length)] / REFERENCE_FREQ
+						synths[i].triggerAttack(relativeFreqs[i] * REFERENCE_FREQ);
 						break;
 					case "single_repulsor":
-						synths[i].triggerAttack(LIGHT[weakHash(result.color, LIGHT.length)]);
+						relativeFreqs[i] = LIGHT[weakHash(result.color, i, LIGHT.length)] / REFERENCE_FREQ;
+						synths[i].triggerAttack(relativeFreqs[i] * REFERENCE_FREQ);
 						break;
 					default:
 						break;
