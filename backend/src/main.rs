@@ -22,7 +22,7 @@ struct IVPRequest {
     method: String
 }
 
-const K: f64 = 6.6743;
+const K: f64 = 1.;
 const CHAMBER_RADIUS_SQ: f64 = 9.;
 const PENALTY: f64 = 200.;
 
