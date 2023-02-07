@@ -24,7 +24,7 @@ import Tooltip from '@mui/material/Tooltip';
 function getNewIVP(): PartialIVP {
 	return {
 		id: getUniqueId(), 
-		x0: getRandomStartPosition(1, 2), 
+		x0: getRandomStartPosition(0.5, 1), 
 		v0: getRandomDirection(10, 170), 
 		h: "0.01", 
 		n: "10000", 

@@ -12,6 +12,9 @@ const LIGHT = [82.41, 110, 138.59, 164.81, 220, 277.18];
 const DARK = [87.31, 110, 146.83, 174.61, 220, 293.66];
 const REFERENCE_FREQ = 110;
 const SKIP = 2;
+const extents = [
+	[-1.2, 1.2], [-1.2, 1.2]
+] as [number, number][];
 let active: string[] = [];
 let relativeFreqs: number[] = [];
 
@@ -58,11 +61,6 @@ const Graph = ({data, field}:
 		const dressing = svg.append("g");
 	
 		if (data !== undefined && data.length > 0) {
-
-			// calculate domains to show all data points nicely
-			const extents = [
-				[-3, 3], [-3, 3]
-			] as [number, number][];
 
 			const scale  = extents
 				.map((e: [number, number], i: number) => (e[1] - e[0]) / graphDims[i])

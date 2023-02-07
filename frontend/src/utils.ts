@@ -23,8 +23,8 @@ export function weakHash(val: string, i: number, mod: number) {
 
 export function getRandomDirection(min: number, max: number) {
 	const degrees = random(min, max);
-	const x = (2 * cos(unit(degrees, 'deg'))).toString().substring(0, 6);
-	const y = (2 * sin(unit(degrees, 'deg'))).toString().substring(0, 6);
+	const x = (cos(unit(degrees, 'deg'))).toString().substring(0, 6);
+	const y = (sin(unit(degrees, 'deg'))).toString().substring(0, 6);
 	return `(${x}, ${y})`;
 }
 
