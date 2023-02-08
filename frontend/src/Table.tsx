@@ -38,7 +38,35 @@ function TableView(
 		{register: (f: () => IVP[]) => void}
 	) {
 	
-	const [ivps, setIvps] = useState<PartialIVP[]>([getNewIVP(), getNewIVP()]);
+	const [ivps, setIvps] = useState<PartialIVP[]>([
+		{
+			id: getUniqueId(),
+			x0: "(1, 0)",
+			v0: "(0, 1)",
+			h: "0.01",
+			n: "10000",
+			method: "RK4",
+			color: "#FF0000"
+		},
+		{
+			id: getUniqueId(),
+			x0: "(1, 0)",
+			v0: "(0, 1)",
+			h: "0.01",
+			n: "10000",
+			method: "Backward Euler",
+			color: "#0000FF"
+		},
+		{
+			id: getUniqueId(),
+			x0: "(1, 0)",
+			v0: "(0, 1)",
+			h: "0.01",
+			n: "10000",
+			method: "Forward Euler",
+			color: "#00FF00"
+		}
+	]);
 	const [colorAnchor, setColorAnchor] = useState<HTMLButtonElement | null>(null);
 	const [colorOpen, setColorOpen] = useState<string | null>(null);
 
