@@ -83,7 +83,8 @@ fn integrate(req: IVPRequest) -> Vec<Point> {
 
 fn f_origin_attractor(x: State) -> State {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
-    let force = -x * K / d2;
+    let d3 = d2.powf(1.5);
+    let force = -x * K / d3;
     
     State::new(x[2], x[3], force[0], force[1])
 }
@@ -91,15 +92,16 @@ fn f_origin_attractor(x: State) -> State {
 fn j_origin_attractor(x: State, h: f64) -> Matrix4<f64> {
 
     // ad hoc computation steps
-    let denom = (x[0].powf(2.) + x[1].powf(2.)).powf(2.);
-    let diff = h * K * (x[0].powf(2.) - x[1].powf(2.)) / denom;
-    let prod = h * K * 2. * x[0] * x[1] / denom;
+    let denom = (x[0].powf(2.) + x[1].powf(2.)).powf(2.5);
+    let diff1 = h * K * (2. * x[0].powf(2.) - x[1].powf(2.)) / denom;
+    let diff2 = h * K * (2. * x[1].powf(2.) - x[0].powf(2.)) / denom;
+    let prod = h * K * 3. * x[0] * x[1] / denom;
     
     let j = Matrix4::new(
-         -1.,    0.,  h,  0., 
-          0.,   -1.,  0.,  h,
-        diff,  prod, -1.,  0.,
-        prod, -diff,  0., -1.
+          -1.,    0.,   h,  0., 
+           0.,   -1.,  0. ,  h,
+        diff1,  prod, -1.,  0.,
+         prod, diff2,  0., -1.
         );
         
     j
@@ -107,6 +109,8 @@ fn j_origin_attractor(x: State, h: f64) -> Matrix4<f64> {
 
 fn f_origin_repulsor(x: State) -> State {
     let d2 = x[0].powf(2.) + x[1].powf(2.);
+    let d3 = d2.powf(1.5);
+    
     let penalty = {
         if d2 > CHAMBER_RADIUS_SQ {
             (CHAMBER_RADIUS_SQ - d2) * PENALTY
@@ -115,15 +119,17 @@ fn f_origin_repulsor(x: State) -> State {
         }
     };
     
-    let force = x * (K / d2 + penalty);
+    let force = x * (K / d3 + penalty);
     
     State::new(x[2], x[3], force[0], force[1])
 }
 
+// this needs to be revisited
 fn j_origin_repulsor(x: State, h: f64) -> Matrix4<f64> {
 
     // ad hoc computation steps
     let r2 = x[0].powf(2.) + x[1].powf(2.);
+
     let k = {
         if r2 < CHAMBER_RADIUS_SQ {
             -K
@@ -132,15 +138,16 @@ fn j_origin_repulsor(x: State, h: f64) -> Matrix4<f64> {
         }
     };
 
-    let denom = r2.powf(2.);
-    let diff = - h * k * (x[0].powf(2.) - x[1].powf(2.)) / denom;
-    let prod = - h * k * 2. * x[0] * x[1] / denom;
+    let denom = r2.powf(1.25);
+    let diff1 = - h * k * (2. * x[0].powf(2.) - x[1].powf(2.)) / denom;
+    let diff2 = - h * k * (2. * x[1].powf(2.) - x[0].powf(2.)) / denom;
+    let prod = - h * k * 3. * x[0] * x[1] / denom;
     
     let j = Matrix4::new(
          -1.,    0.,  h,  0., 
           0.,   -1.,  0.,  h,
-        diff,  prod, -1.,  0.,
-        prod, -diff,  0., -1.
+        diff1,  prod, -1.,  0.,
+        prod, diff2,  0., -1.
         );
         
     j
