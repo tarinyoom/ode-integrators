@@ -41,8 +41,8 @@ function TableView(
 	const [ivps, setIvps] = useState<PartialIVP[]>([
 		{
 			id: getUniqueId(),
-			x0: "(1, 0)",
-			v0: "(0, 1)",
+			x0: "(1.2, 0)",
+			v0: "(0, 0.8)",
 			h: "0.01",
 			n: "10000",
 			method: "RK4",
@@ -50,8 +50,8 @@ function TableView(
 		},
 		{
 			id: getUniqueId(),
-			x0: "(1, 0)",
-			v0: "(0, 1)",
+			x0: "(1.2, 0)",
+			v0: "(0, 0.8)",
 			h: "0.01",
 			n: "10000",
 			method: "Backward Euler",
@@ -59,8 +59,8 @@ function TableView(
 		},
 		{
 			id: getUniqueId(),
-			x0: "(1, 0)",
-			v0: "(0, 1)",
+			x0: "(1.2, 0)",
+			v0: "(0, 0.8)",
 			h: "0.01",
 			n: "10000",
 			method: "Forward Euler",
