@@ -10,5 +10,4 @@ AWS lambda backend, written in Rust. Backend takes in a single IVP and returns a
 React website using create-react-app. The website features an interface where the user can specify their IVPs, and then plays an animation based on their solutions. This animation is accompanied by sound, dynamically generated based on the solved trajectories.
 
 ### Open Tasks
-- Implement Backward Euler
 - (bug) animations for trajectories calculated with different time steps are not correctly synchronized, since each animation is played independently.
