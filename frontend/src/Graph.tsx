@@ -156,10 +156,10 @@ const Graph = ({data, field}:
 						switch (result.field) {
 							case "single_attractor":
 								console.log(`relative freqs is ${relativeFreqs[i]}`)
-								synths[i].volume.value = (-7 - 9 * dot(point.x, point.x)) / SKIP * relativeFreqs[i];
+								synths[i].volume.value = (-17 - 9 * dot(point.x, point.x)) / SKIP * relativeFreqs[i];
 								break;
 							case "single_repulsor":
-								synths[i].volume.value = (-12 - 7 * (sqrt(dot(point.x, point.x)) as number)) / SKIP * relativeFreqs[i];
+								synths[i].volume.value = (-22 - 7 * (sqrt(dot(point.x, point.x)) as number)) / SKIP * relativeFreqs[i];
 								break;
 						}
 	
